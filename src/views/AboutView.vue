@@ -1,8 +1,25 @@
 <template>
   <div class="about">
     <h1>This is an about page</h1>
-    <p>测试--测试</p>
-    <p>测试 </p>
-    <div>what</div>
+    <div>此页面暂时用于debug</div>
+
   </div>
 </template>
+<script>
+export default{
+  data(){
+    return{
+      tableData: [
+        {
+          projname: '测试项目'
+        }, {
+          projname: '测试项目'
+        }, {
+          projname: '测试项目'
+        }, {
+          projname: '测试项目'
+        }],
+    }
+  }
+}
+</script>

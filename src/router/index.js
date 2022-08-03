@@ -19,7 +19,7 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue'),
   },
   {
     path: '/login',
@@ -34,7 +34,8 @@ const routes = [
   {
     path: '/manageProject',
     name: 'manageProject',
-    component: () => import('../views/ManageProject')
+    component: () => import('../views/ManageProject'),
+
   }
 ]
 
@@ -53,7 +54,7 @@ router.beforeEach((to, from, next) => {
   // 若用户未登录且访问的页面需要登录，则跳转至登录页面
   if (!userInfo && to.meta.requireAuth) {
     next({
-      name: 'Login',
+      name: 'login',
     })
   }
   next()
@@ -70,7 +71,7 @@ router.beforeEach((to, from, next) => {
   // 若用户未登录且访问的页面需要登录，则跳转至登录页面
   if (!userInfo && to.meta.requireAuth) {
     next({
-      name: 'Login',
+      name: 'login',
     })
   }
 
