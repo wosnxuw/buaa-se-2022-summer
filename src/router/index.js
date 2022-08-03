@@ -36,6 +36,18 @@ const routes = [
     name: 'manageProject',
     component: () => import('../views/ManageProject'),
 
+  },
+  {
+    path: '/manageRubbish',
+    name: 'manageRubbish',
+    component: () => import('../views/ManageRubbish'),
+
+  },
+  {
+    path: '/addProject',
+    name: 'addProject',
+    component: () => import('../views/AddProject'),
+
   }
 ]
 

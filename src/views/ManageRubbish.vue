@@ -28,23 +28,18 @@
                 prop="teamname"
                 label="所属团队">
             </el-table-column>
-            <el-table-column label="操作" width="300">
+            <el-table-column label="操作" width="00">
               <template slot-scope="scope">
                 <el-button
                     size="mini"
                     type="primary"
-                    @click="handleLook(scope.$index, scope.row)">查看
-                </el-button>
-                <el-button
-                    size="mini"
-                    icon="el-icon-edit"
-                    @click="handleEdit()">重命名
+                    @click="handleRedo(scope.$index, scope.row)">恢复
                 </el-button>
                 <el-button
                     size="mini"
                     type="danger"
                     icon="el-icon-delete"
-                    @click="handleDelete(scope.$index, scope.row)">移到回收站
+                    @click="handleDelete(scope.$index, scope.row)">彻底删除
                 </el-button>
               </template>
             </el-table-column>
@@ -56,13 +51,16 @@
 </template>
 
 <script>
+
 import qs from "qs";
+
+
 export default {
-  name: "ManageProject",
+  name: "ManageRubbish",
   data() {
     return {
       /*标题选择用变量*/
-      activeIndex: '1',
+      activeIndex: '2',
       /*三个列表*/
       projectlist:[],
       projectidlist:[],
@@ -82,6 +80,7 @@ export default {
           projname: '测试项目',
           teamname:'abc123'
         }],
+      /*新建项目时 将会提交的数据*/
     }
   },
   methods: {
@@ -121,32 +120,31 @@ export default {
     showAdd:function(){
       this.$router.push('/addProject');
     },
-    handleEdit() {
-      this.$prompt('请输入项目新名称', '提示', {
+    handleDelete(index) {
+      this.$confirm('此操作将永久删除该项目, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        inputPlaceholder:'项目新名称'
-      }).then(({ value }) => {
+        type: 'warning'
+      }).then(() => {
         this.$message({
           type: 'success',
-          message: '你把项目更名为: ' + value
+          message: '删除成功!'
         });
         this.$axios({
           method: 'post',
           url: '',
           data: qs.stringify({
-            projectid:this.getByProjectName(this.form.projectname),
-            newprojectname:value,
+            projectid:this.projectidlist[index]
           })
         })
             .then(res => {
               switch (res.data.errornumber) {
                 case 0:
-                  this.$message.success("改名成功！");
-                  this.$router.push('/manageProject')
+                  this.$message.success("删除项目成功！");
+                  this.$router.push('/manageRubbish');
                   break;
                 case 1:
-                  this.$message.error("失败");
+                  this.$message.error("请求方式错误");
                   break;
               }
             })
@@ -156,15 +154,11 @@ export default {
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: '取消输入'
+          message: '已取消删除'
         });
       });
     },
-    handleDelete(index) {
-      this.$message({
-        type: 'info',
-        message: '点击移除'
-      });
+    handleRedo(index) {
       this.$axios({
         method: 'post',
         url: '',
@@ -175,8 +169,8 @@ export default {
           .then(res => {
             switch (res.data.errornumber) {
               case 0:
-                this.$message.success("移动到回收站成功！");
-                this.$router.push('/manageProject')
+                this.$message.success("恢复项目成功！");
+                this.$router.push('/manageRubbish');
                 break;
               case 1:
                 this.$message.error("请求方式错误");
@@ -186,9 +180,6 @@ export default {
           .catch(err => {
             console.log(err);
           })
-    },
-    handleLook(row) {
-      console.log(row);
       /*row表示第几行*/
     }
   },
@@ -233,6 +224,7 @@ export default {
 </script>
 
 <style scoped>
+
 #proj-show {
   margin: 0 auto;
 }
