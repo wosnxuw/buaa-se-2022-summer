@@ -143,6 +143,7 @@ export default {
   display: inline-block;
   background-color: rgba(236,245,255, 0.85);
   border-radius: 20px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)
 }
 #register .btn_register {
   margin-top: 25px;
