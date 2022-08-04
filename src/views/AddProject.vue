@@ -93,24 +93,9 @@ export default {
       form:{
         projectname:'',
         projectdiscrp:'',
-        teamname:''
+        //teamname:''
       },
-      options: [{
-        value: '选项1',
-        label: '黄金糕'
-      }, {
-        value: '选项2',
-        label: '双皮奶'
-      }, {
-        value: '选项3',
-        label: '蚵仔煎'
-      }, {
-        value: '选项4',
-        label: '龙须面'
-      }, {
-        value: '选项5',
-        label: '北京烤鸭'
-      }],
+      options: [],
       value: ''
     }
   },
@@ -166,11 +151,11 @@ export default {
     addproj:function () {
       this.$axios({
         method: 'post',
-        url: '',
+        url: '/insertproject/',
         data: qs.stringify({
           projectname:this.form.projectname,
           projectdiscrp:this.form.projectdiscrp,
-          teamname:this.form.teamname
+          teamname:this.value
         })
       })
           .then(res => {
@@ -192,20 +177,22 @@ export default {
   },mounted() { //钩子
     const id=this.$store.state.userid;
     let that=this;
-    this.$axios.get({
-      url: '/',
+    console.log('abc');
+    this.$axios({
+      url: '/getteammember/',
       method: 'post',
-      params: {
-        userid:id
-      },
+      data: qs.stringify({
+        now_id:id
+      })
     }).then(res => {
-          switch (res.data.errornumber) {
+          switch (res.data.result) {
             case 0:
-              that.teamlist=res.data.teamlist;
+              that.teamlist=res.data.team_list;
               var i=0;
               for(i=0;i<that.teamlist.length;i++){
                 that.options.push( {value:that.teamlist[i],label:that.teamlist[i]});
               }
+              console.log(that.options);
               break;
             case 1:
               this.$message.error("请求方式错误");

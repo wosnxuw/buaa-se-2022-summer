@@ -16,25 +16,31 @@
       <el-container>
         <el-main>
           <el-button type="text" @click="newTeam">新建队伍</el-button>
-          <el-collapse v-model="activeName" accordion>
-            <!--collapse-item和里面的内容都需要v-for循环-->
-            <div  v-for="(item,index) in teamlist" :key="item">
-            <el-collapse-item :title=item :name=index >
-              <el-button type="success" plain @click="invite(index)"> 邀请成员 </el-button>
-              <div v-for="(item2,index2) in userlist[index]" :key="item2">
-                <el-divider></el-divider>
-                {{ item2 }}
-                <el-button size="mini" class="right" type="primary" plain @click="toManager(index,index2)">变更为管理员</el-button>
-                <el-button size="mini" class="right"  type="danger" plain @click="deleteUser(index,index2)">移出团队</el-button>
+          <el-row :gutter="20">
+            <el-col :span="16" :offset="4">
+              <div>
+                <el-collapse v-model="activeName" accordion>
+                  <!--collapse-item和里面的内容都需要v-for循环-->
+                  <div  v-for="(item,index) in teamlist" :key="item">
+                    <el-collapse-item :title=item :name=index >
+                      <el-button type="success" plain @click="invite(index)"> 邀请成员 </el-button>
+                      <div v-for="(item2,index2) in userlist[index]" :key="item2">
+                        <el-divider></el-divider>
+                        {{ item2 }}
+                        <el-button size="mini" class="right" type="primary" plain @click="toManager(index,index2)">变更为管理员</el-button>
+                        <el-button size="mini" class="right"  type="danger" plain @click="deleteUser(index,index2)">移出团队</el-button>
+                      </div>
+                      <div v-for="(item3) in managerlist[index]" :key="item3">
+                        <el-divider></el-divider>
+                        {{ item3 }}
+                        <el-button size="mini" class="right" type="success" plain disabled>管理员</el-button>
+                      </div>
+                    </el-collapse-item>
+                  </div>
+                </el-collapse>
               </div>
-              <div v-for="(item3) in managerlist[index]" :key="item3">
-                <el-divider></el-divider>
-                {{ item3 }}
-                <el-button size="mini" class="right" type="success" plain disabled>管理员</el-button>
-              </div>
-            </el-collapse-item>
-            </div>
-          </el-collapse>
+            </el-col>
+          </el-row>
         </el-main>
       </el-container>
     </el-container>
@@ -278,6 +284,11 @@ export default {
         }
     );
     console.log("c");
+  },
+  watch:{
+    $router(){
+      this.getData(); //当对象改变，执行操作获取新数据
+    }
   }
 }
 </script>

@@ -38,7 +38,7 @@
                 <el-button
                     size="mini"
                     icon="el-icon-edit"
-                    @click="handleEdit()">重命名
+                    @click="handleEdit(scope.$index)">重命名
                 </el-button>
                 <el-button
                     size="mini"
@@ -68,20 +68,7 @@ export default {
       projectidlist:['1','2','3'],
       teamlist:[],
       /*整顿好的项目列表，待展示*/
-      tableData: [
-        {
-          projname: '测试项目',
-          teamname:'abc123'
-        }, {
-          projname: '测试项目',
-          teamname:'abc123'
-        }, {
-          projname: '测试项目',
-          teamname:'abc123'
-        }, {
-          projname: '测试项目',
-          teamname:'abc123'
-        }],
+      tableData: [],
     }
   },
   methods: {
@@ -118,7 +105,7 @@ export default {
     showAdd:function(){
       this.$router.push('/addProject');
     },
-    handleEdit() {
+    handleEdit(index) {
       this.$prompt('请输入项目新名称', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -128,17 +115,20 @@ export default {
           type: 'success',
           message: '你把项目更名为: ' + value
         });
+        let that=this;
+        console.log(that.projectidlist[index]);
         this.$axios({
           method: 'post',
-          url: '',
+          url: '/renameproject/',
           data: qs.stringify({
-            projectid:this.getByProjectName(this.form.projectname),
+            projectid:that.projectidlist[index],
             newprojectname:value,
           })
         })
             .then(res => {
               switch (res.data.errornumber) {
                 case 0:
+                  console.log(that.projectidlist[index]);
                   this.$message.success("改名成功！");
                   this.$router.push('/manageProject')
                   break;
@@ -150,23 +140,15 @@ export default {
             .catch(err => {
               console.log(err);
             })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '取消输入'
-        });
-      });
+      })
     },
     handleDelete(index) {
-      this.$message({
-        type: 'info',
-        message: '点击移除'
-      });
+      let that=this;
       this.$axios({
         method: 'post',
-        url: '',
+        url: '/removeproject/',
         data: qs.stringify({
-          projectid:this.projectidlist[index]
+          projectid:that.projectidlist[index]
         })
       })
           .then(res => {
@@ -187,7 +169,7 @@ export default {
     handleLook(index) {
       console.log('项目管理');
       console.log(index);
-      this.$store.state.projectid=index;
+      this.$store.state.projectid= this.projectidlist[index];
       this.$router.push('/project');
     }
   },
@@ -195,22 +177,24 @@ export default {
     const id=this.$store.state.userid;
     console.log(id);
     let that=this;
-    this.$axios.get({
-      url: '/user',
-      method: 'get',
-      params: {
+    this.$axios({
+      url: '/initialproject/',
+      method: 'post',
+      data: qs.stringify({
         userid:id
-      },
+      })
     }).then(res => {
           switch (res.data.errornumber) {
             case 0:
-              that.projectlist=res.data.projectlist;
+              that.projectlist=res.data.projectnamelist;
               that.projectidlist=res.data.projectidlist;
               that.teamlist=res.data.teamlist;
+              console.log(that.projectlist);
+              console.log(that.projectidlist);
+              console.log(that.teamlist);
               var max = that.projectlist.length;
               for(var i=0; i<max;i++){
-                let r = {projname: res.data.projectlist[i] ,teamname:res.data.teamlist[i] }
-                that.tableData.push(r);
+                that.tableData.push({projname: that.projectlist[i] ,teamname:that.teamlist[i] });
               }
               break;
             case 1:
@@ -219,19 +203,9 @@ export default {
           }
         }
     );
+    console.log('dead')
   },
   computed:{
-    getByProjectName(name){
-      let index=0;
-      let item;
-      for (item in this.projectlist) {
-        if (item==name){
-          break;
-        }
-        index++;
-      }
-      return this.projectidlist.indexOf(index)
-    }
   }
 }
 </script>

@@ -2,7 +2,7 @@
   <div>
 
     <div class="menu">
-      <button id="back">返回</button>
+      <button id="back" @click="back">返回</button>
       <button id="new">新建</button>
       <button id="save">保存</button>
       <button id="delet">删除</button>
@@ -112,10 +112,20 @@
 </template>
 
 <script>
+import qs from "qs";
+
 export default{
+  data(){
+    return{
+      msg:'',
+    }
+  },
   components:{},
   methods:{
-    initializer(){
+    back(){
+      this.$router.push('/project');
+    },
+    initializer(init_msg){
       let optionsButton = document.querySelectorAll(".option-button");
       let advancedOptionButton = document.querySelectorAll(".adv-option-button");
       let fontName = document.getElementById("fontName");
@@ -135,6 +145,8 @@ export default{
       this.highlighter(spacingButtons, true);
       this.highlighter(formatButtons, false);
       this.highlighter(scriptButtons, true);
+      console.log(init_msg);
+      if (init_msg != null)document.getElementById('text-input').innerHTML = init_msg;
 
       fontList.map((value) => {
         let option = document.createElement("option");
@@ -177,12 +189,20 @@ export default{
           alert('保存内容不能为空');
           return;
         }
+        let id=this.$store.state.projectid;
+        let that=this;
         this.$axios({
-          method:'POST',
-          url:'',
-          data:{
-            id:'',
-            content:message
+          url: '/inserttext/',
+          method: 'post',
+          data: qs.stringify({
+            projectid: id,
+            projecttext:message
+          })
+        }).then(res => {
+          switch (res.data.errornumber) {
+            case 0:
+              that.msg=res.data.message;
+              break;
           }
         })
         // $.ajax({
@@ -195,13 +215,10 @@ export default{
         //     }
         // })
       });
-
       createNew.addEventListener('click', ()=>{
         document.getElementById('text-input').innerHTML = '<i><font color="#929090">请创建新文本</font></i>';
       })
-
     },
-
     modifyText(command, defaultUi, value) {
       document.execCommand(command, defaultUi, value);
     },
@@ -236,12 +253,29 @@ export default{
   },
 
   mounted(){
-    this.initializer();
+    let id=this.$store.state.projectid;
+    this.$axios({
+      url: '/edittext/',
+      method: 'post',
+      data: qs.stringify({
+        projectid: id,
+      })
+    }).then(res => {
+      switch (res.data.errornumber) {
+        case 0:
+          this.msg=res.data.projecttext;
+          console.log('初始化');
+          console.log(this.msg);
+          break;
+      }
+    })
+    this.initializer(this.msg);
+    if (this.msg != null)document.getElementById('text-input').innerHTML = this.msg;
   }
 }
 </script>
 
-<style>
+<style scoped>
 * {
   padding: 0;
   margin: 0;

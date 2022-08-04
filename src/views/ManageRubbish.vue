@@ -66,20 +66,7 @@ export default {
       projectidlist:[],
       teamlist:[],
       /*整顿好的项目列表，待展示*/
-      tableData: [
-        {
-          projname: '测试项目',
-          teamname:'abc123'
-        }, {
-          projname: '测试项目',
-          teamname:'abc123'
-        }, {
-          projname: '测试项目',
-          teamname:'abc123'
-        }, {
-          projname: '测试项目',
-          teamname:'abc123'
-        }],
+      tableData: [],
       /*新建项目时 将会提交的数据*/
     }
   },
@@ -123,13 +110,9 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
-        });
         this.$axios({
           method: 'post',
-          url: '',
+          url: '/deleteproject/',
           data: qs.stringify({
             projectid:this.projectidlist[index]
           })
@@ -158,7 +141,7 @@ export default {
     handleRedo(index) {
       this.$axios({
         method: 'post',
-        url: '',
+        url: '/regainproject/',
         data: qs.stringify({
           projectid:this.projectidlist[index]
         })
@@ -177,33 +160,39 @@ export default {
           .catch(err => {
             console.log(err);
           })
-      /*row表示第几行*/
     }
   },
   mounted() { //钩子
     const id=this.$store.state.userid;
-    let that=this;
     console.log(id);
-    this.$axios.get({
-      url: '/user',
-      method: 'get',
-      params: {
+    let that=this;
+    this.$axios({
+      url: '/initialgarbage/',
+      method: 'post',
+      data: qs.stringify({
         userid:id
-      },
+      })
     }).then(res => {
           switch (res.data.errornumber) {
             case 0:
-              that.projectlist=res.data.projectlist;
+              that.projectlist=res.data.projectnamelist;
               that.projectidlist=res.data.projectidlist;
               that.teamlist=res.data.teamlist;
+              console.log(that.projectlist);
+              console.log(that.projectidlist);
+              console.log(that.teamlist);
+              var max = that.projectlist.length;
+              for(var i=0; i<max;i++){
+                that.tableData.push({projname: that.projectlist[i] ,teamname:that.teamlist[i] });
+              }
               break;
             case 1:
               this.$message.error("请求方式错误");
               break;
           }
         }
-
     );
+    console.log('dead')
   },
   computed:{
     getByProjectName(name){
