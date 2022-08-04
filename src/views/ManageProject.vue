@@ -2,7 +2,7 @@
   <div id="manage" class="manage">
     <el-container>
       <el-header>
-        <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect"
+        <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal"
                  background-color="#545c64"
                  text-color="#fff"
                  active-text-color="#ffd04b">
@@ -33,7 +33,7 @@
                 <el-button
                     size="mini"
                     type="primary"
-                    @click="handleLook(scope.$index, scope.row)">查看
+                    @click="handleLook(scope.$index)">查看
                 </el-button>
                 <el-button
                     size="mini"
@@ -65,7 +65,7 @@ export default {
       activeIndex: '1',
       /*三个列表*/
       projectlist:[],
-      projectidlist:[],
+      projectidlist:['1','2','3'],
       teamlist:[],
       /*整顿好的项目列表，待展示*/
       tableData: [
@@ -108,9 +108,6 @@ export default {
           message: '已放弃'
         });
       });
-    },
-    handleSelect(key, keyPath) {
-      console.log(key, keyPath);
     },
     showproj: function () {
       this.$router.push('/manageProject');
@@ -187,19 +184,22 @@ export default {
             console.log(err);
           })
     },
-    handleLook(row) {
-      console.log(row);
-      /*row表示第几行*/
+    handleLook(index) {
+      console.log('项目管理');
+      console.log(index);
+      this.$store.state.projectid=index;
+      this.$router.push('/project');
     }
   },
   mounted() { //钩子
-    console.log(this.$store.getters.getUser())
+    const id=this.$store.state.userid;
+    console.log(id);
     let that=this;
     this.$axios.get({
       url: '/user',
       method: 'get', // 默认值
       params: {
-        userid:this.$store.getters.getUser()
+        userid:id
       },
     }).then(res => {
           switch (res.data.errornumber) {
@@ -218,7 +218,6 @@ export default {
               break;
           }
         }
-
     );
   },
   computed:{

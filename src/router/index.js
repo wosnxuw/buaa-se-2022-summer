@@ -53,6 +53,11 @@ const routes = [
     path: '/manageTeam',
     name: 'manageTeam',
     component: () => import('../views/ManageTeam'),
+  },
+  {
+    path: '/project',
+    name: 'project',
+    component: () => import('../views/ProjectInfo'),
   }
 ]
 

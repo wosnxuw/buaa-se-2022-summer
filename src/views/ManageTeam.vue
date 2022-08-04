@@ -2,7 +2,7 @@
   <div id="manage" class="manage">
     <el-container>
       <el-header>
-        <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect"
+        <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal"
                  background-color="#545c64"
                  text-color="#fff"
                  active-text-color="#ffd04b">
@@ -209,13 +209,14 @@ export default {
     }
   },
   mounted() {
-
+    const id=this.$store.state.userid;
+    console.log(id);
     let that=this;
     this.$axios.get({
       url: '/user',
       method: 'get', // 默认值
       params: {
-        userid:this.$store.getters.getUser()
+        userid:id
       },
     }).then(res => {
           switch (res.data.errornumber) {
