@@ -9,8 +9,8 @@
           <el-menu-item index="1" @click="showproj" >项目中心</el-menu-item>
           <el-menu-item index="2" @click="showrubbish">回收站</el-menu-item>
           <el-menu-item index="3" @click="showAdd">新建项目</el-menu-item>
-          <el-menu-item index="4" > <el-button type="text" @click="toManageTeam"> 管理团队</el-button></el-menu-item>
-          <el-menu-item index="5" text-color="#eb5451"> <el-button type="text" @click="logout"> 退出登陆</el-button></el-menu-item>
+          <el-menu-item index="4" @click="toManageTeam">管理团队</el-menu-item>
+          <el-menu-item index="5" text-color="#eb5451"> <el-button type="text" @click="logout">退出登陆</el-button></el-menu-item>
         </el-menu>
       </el-header>
       <el-container>
@@ -86,7 +86,7 @@ export default {
   },
   methods: {
     toManageTeam(){
-      this.$router.push('/login');
+      this.$router.push('/manageTeam');
     },/*路由未定*/
     logout() {
       this.$confirm('您即将退出登陆, 是否继续?', '提示', {
@@ -207,6 +207,11 @@ export default {
               that.projectlist=res.data.projectlist;
               that.projectidlist=res.data.projectidlist;
               that.teamlist=res.data.teamlist;
+              var max = that.projectlist.length;
+              for(var i=0; i<max;i++){
+                let r = {projname: res.data.projectlist[i] ,teamname:res.data.teamlist[i] }
+                that.tableData.push(r);
+              }
               break;
             case 1:
               this.$message.error("请求方式错误");
