@@ -264,13 +264,13 @@ export default{
       switch (res.data.errornumber) {
         case 0:
           this.msg=res.data.projecttext;
-          console.log('初始化');
-          console.log(this.msg);
+          //console.log('初始化');
+          //console.log(this.msg);
           break;
       }
     })
-    this.initializer(this.msg);
-    if (this.msg != null)document.getElementById('text-input').innerHTML = this.msg;
+    var f =this.msg;
+    this.initializer(f);
   }
 }
 </script>
