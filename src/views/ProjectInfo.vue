@@ -78,6 +78,7 @@ export default {
   },
   methods: {
     showproj: function () {
+      this.$store.state.projectid=undefined;
       this.$router.push('/manageProject');
     },
     newdraw(){

@@ -3,11 +3,7 @@ const user = {
     /* 定义 user 数据对象和它的初始值 */
     state() {
         return {
-            user: {
-                'email': 'testuser',
-                'token': 'rrrrrrrrrr',
-                'userid': 300
-            }
+            user: null
         }
     },
     /* 定义读取方法 getUser，从 localStorage 中读取 user 数据并转换成 JSON 格式 */

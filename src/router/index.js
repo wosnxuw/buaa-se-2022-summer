@@ -58,6 +58,11 @@ const routes = [
     path: '/project',
     name: 'project',
     component: () => import('../views/ProjectInfo'),
+  },
+  {
+    path: '/documentEdit',
+    name: 'documentEdit',
+    component: () => import('../views/DocumentEdit'),
   }
 ]
 
@@ -81,23 +86,24 @@ router.beforeEach((to, from, next) => {
   }
   next()
 })
+
 /*被拦截后登录成功后，能自动返回原先访问的路由地址*/
-router.beforeEach((to, from, next) => {
-  // 通过 Vuex 获取用户登录信息
-  const userInfo = user.getters.getUser(user.state());
-
-  // 若前往的是登录路由，则保存当前路由到 preRoute 的键值对中，以便登录成功后跳转
-  if (to.path === '/login') {
-    localStorage.setItem("preRoute", router.currentRoute.fullPath);
-  }
-  // 若用户未登录且访问的页面需要登录，则跳转至登录页面
-  if (!userInfo && to.meta.requireAuth) {
-    next({
-      name: 'login',
-    })
-  }
-
-  next()
-})
+// router.beforeEach((to, from, next) => {
+//   // 通过 Vuex 获取用户登录信息
+//   const userInfo = user.getters.getUser(user.state());
+//
+//   // 若前往的是登录路由，则保存当前路由到 preRoute 的键值对中，以便登录成功后跳转
+//   if (to.path === '/login') {
+//     localStorage.setItem("preRoute", router.currentRoute.fullPath);
+//   }
+//   // 若用户未登录且访问的页面需要登录，则跳转至登录页面
+//   if (!userInfo && to.meta.requireAuth) {
+//     next({
+//       name: 'login',
+//     })
+//   }
+//
+//   next()
+// })
 
 export default router

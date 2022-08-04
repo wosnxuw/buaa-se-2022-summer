@@ -45,10 +45,9 @@ export default {
         this.$message.warning("请输入用户名和密码！");
         return;
       }
-
       this.$axios({
         method: 'post',           /* 指明请求方式，可以是 get 或 post */
-        url: '',       /* 指明后端 api 路径，由于在 main.js 已指定根路径，因此在此处只需写相对路由 */
+        url: '/login/',       /* 指明后端 api 路径，由于在 main.js 已指定根路径，因此在此处只需写相对路由 */
         data: qs.stringify({      /* 需要向后端传输的数据，此处使用 qs.stringify 将 json 数据序列化以发送后端 */
           email: this.form.email,
           password: this.form.password
@@ -66,16 +65,9 @@ export default {
                     'userid': res.data.userid
                   }
                 });
-                this.$store.state.user=res.data.userid;
-                /* 从 localStorage 中读取 preRoute 键对应的值 */
-                const history_pth = localStorage.getItem('preRoute');
-                /* 若保存的路由为空或为注册路由，则跳转主页；否则跳转前路由（setTimeout表示1000ms后执行） */
+                this.$store.state.userid=res.data.userid;
                 setTimeout(() => {
-                  if (history_pth == null || history_pth === '/register') {
-                    this.$router.push('/');
-                  } else {
-                    this.$router.push({ path: history_pth });
-                  }
+                  this.$router.push('/manageProject');
                 }, 1000);
                 break;}
               case 1:
@@ -88,13 +80,13 @@ export default {
                 this.$message.error("密码错误，请重试");
                 break;
             }
+
           })
           .catch(err => {
             console.log(err);
           })
     },
     toRegister: function () {
-      // 跳转注册的路由
       this.$router.push('/register');
     }
   }

@@ -197,7 +197,7 @@ export default {
     let that=this;
     this.$axios.get({
       url: '/user',
-      method: 'get', // 默认值
+      method: 'get',
       params: {
         userid:id
       },

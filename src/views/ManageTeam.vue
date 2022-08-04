@@ -16,20 +16,16 @@
       <el-container>
         <el-main>
           <el-button type="text" @click="newTeam">新建队伍</el-button>
-
           <el-collapse v-model="activeName" accordion>
             <!--collapse-item和里面的内容都需要v-for循环-->
-
             <div  v-for="(item,index) in teamlist" :key="item">
-
             <el-collapse-item :title=item :name=index >
-
               <el-button type="success" plain @click="invite(index)"> 邀请成员 </el-button>
               <div v-for="(item2,index2) in userlist[index]" :key="item2">
                 <el-divider></el-divider>
                 {{ item2 }}
                 <el-button size="mini" class="right" type="primary" plain @click="toManager(index,index2)">变更为管理员</el-button>
-                <el-button size="mini" class="right"  type="danger" plain>移出团队</el-button>
+                <el-button size="mini" class="right"  type="danger" plain @click="deleteUser(index,index2)">移出团队</el-button>
               </div>
               <div v-for="(item3) in managerlist[index]" :key="item3">
                 <el-divider></el-divider>
@@ -38,9 +34,7 @@
               </div>
             </el-collapse-item>
             </div>
-
           </el-collapse>
-
         </el-main>
       </el-container>
     </el-container>
@@ -49,17 +43,16 @@
 
 <script>
 import qs from "qs";
-
 export default {
   name: "ManageTeam",
   data() {
     return {
       activeIndex: '4',
       activeName: '1',
-      teamlist:['测试团队1','测试团队2'],
-      userlist:[ ['张三 孙悟空 666@4.com 管理员' ,'张三 孙悟空 666@4.com 管理员','张三 孙悟空 666@4.com 管理员'] ,['张三 孙悟空 666@4.com 管理员']],
-      emaillist:[['fgggg','fffff'],['ffff']],
-      managerlist:[ ['张三 孙悟空 666@4.com 管理员' ,'张三 孙悟空 666@4.com 管理员','张三 孙悟空 666@4.com 管理员'] ,['张三 孙悟空 666@4.com 管理员']]
+      teamlist:[],
+      userlist:[],
+      emaillist:[],
+      managerlist:[]
     };
   },
   methods:{
@@ -101,21 +94,18 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
       }).then(({ value }) => {
-        this.$message({
-          type: 'success',
-          message: '你的邮箱是: ' + value
-        });
-        /**/
+        const id=this.$store.state.userid;
+        console.log(id);
         this.$axios({
           method: 'post',
-          url: '',
+          url: '/createteam/',
           data: qs.stringify({
-            userid:this.$store.getters.getUser(),
-            teamname:value
+            now_id:id,
+            team_name:value
           })
         })
             .then(res => {
-              switch (res.data.errornumber) {
+              switch (res.data.result) {
                 case 0:
                   this.$message.success("新建团队成功，团队名为:"+value);
                   this.$router.push('/manageTeam');
@@ -125,6 +115,9 @@ export default {
                   break;
                 case 2:
                   this.$message.error("团队名已存在");
+                  break;
+                case 3:
+                  this.$message.error("用户不存在");
                   break;
               }
             })
@@ -137,43 +130,47 @@ export default {
           message: '取消输入'
         });
       });
+      this.$router.push('/manageTeam');
     },
     invite(index){
       this.$prompt('请输入被邀请成员的邮箱', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
       }).then(({ value }) => {
-        this.$message({
-          type: 'success',
-          message: '你的邮箱是: ' + value
-        });
         var that=this;
+        let id=this.$store.state.userid;
+        console.log(id);
+        console.log(value);
+        console.log(that.teamlist[index]);
         this.$axios({
           method: 'post',
-          url: '',
+          url: '/inviteuser/',
           data: qs.stringify({
-            email:value,
-            teamname:that.teamlist[index]
+            now_userid:id,
+            invite_useremail:value,
+            teamname:that.teamlist[index],
           })
         })
             .then(res => {
-              switch (res.data.errornumber) {
+              switch (res.data.result) {
                 case 0:
-                  this.$message.success("新建团队成功，团队名为:"+value);
+                  this.$message.success("添加成员成功");
                   this.$router.push('/manageTeam');
                   break;
-                case 1:
-                  this.$message.error("请求方式错误");
-                  break;
                 case 2:
-                  this.$message.error("团队名已存在");
+                  this.$message.error("不是管理员");
+                  break;
+                case 3:
+                  this.$message.error("邀请用户不存在");
+                  break;
+                case 4:
+                  this.$message.error("该用户已经在团队中");
                   break;
               }
             })
             .catch(err => {
               console.log(err);
             })
-        /**/
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -183,16 +180,21 @@ export default {
     },
     toManager(index,index2){
       var that=this;
+      let id=this.$store.state.userid;
+      console.log(that.emaillist[index][index2]);
       this.$axios({
         method: 'post',
-        url: '',
+        url: '/setadmin/',
         data: qs.stringify({
-          email:that.emaillist[index][index2]
+          id:id,
+          teamname:that.teamlist[index],
+          change_useremail:that.emaillist[index][index2]
         })
       })
           .then(res => {
-            switch (res.data.errornumber) {
+            switch (res.data.result) {
               case 0:
+                this.$message.success('已提升'+that.emaillist[index][index2]+'为管理员')
                 this.$router.push('/manageTeam');
                 break;
               case 1:
@@ -206,30 +208,76 @@ export default {
           .catch(err => {
             console.log(err);
           })
+    },
+    deleteUser(index,index2){
+      var that=this;
+      let id=this.$store.state.userid;
+      console.log(that.emaillist[index][index2]);
+      this.$axios({
+        method: 'post',
+        url: '/deleteuser/',
+        data: qs.stringify({
+          now_userid:id,
+          teamname:that.teamlist[index],
+          delete_useremail:that.emaillist[index][index2]
+        })
+      })
+          .then(res => {
+            switch (res.data.result) {
+              case 0:
+                this.$message.success('已移除'+that.emaillist[index][index2])
+                this.$router.push('/manageTeam');
+                break;
+              case 1:
+                this.$message.error("请求方式错误");
+                break;
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          })
     }
   },
   mounted() {
     const id=this.$store.state.userid;
     console.log(id);
     let that=this;
-    this.$axios.get({
-      url: '/user',
-      method: 'get', // 默认值
-      params: {
-        userid:id
-      },
+    this.$axios({
+      url: '/getteammember/',
+      method: 'post',
+      data: qs.stringify({
+        now_id:id
+      })
     }).then(res => {
-          switch (res.data.errornumber) {
+          console.log('a');
+          console.log(res.data.result);
+          switch (res.data.result) {
             case 0:
-              that.teamlist=res.data.teamlist;
-              that.userlist=res.data.userlist;
-              break;
-            case 1:
-              this.$message.error("请求方式错误");
+              console.log('a');
+              that.teamlist=res.data.team_list;
+              that.userlist=res.data.big_list;
+              that.emaillist=res.data.email_list;
+              console.log(res.data.team_list);
               break;
           }
         }
     );
+    this.$axios({
+      url: '/getteamadmin/',
+      method: 'post',
+      data: qs.stringify({
+        now_id:id
+      })
+    }).then(res => {
+          switch (res.data.result) {
+            case 0:
+              console.log('b');
+              that.managerlist=res.data.big_list;
+              break;
+          }
+        }
+    );
+    console.log("c");
   }
 }
 </script>

@@ -20,8 +20,8 @@
             <el-col :span="12" :offset="6"><div>
               <el-steps :active="step" align-center>
                 <el-step title="输入项目名" description="起一个名字吧"></el-step>
-                <el-step title="输入项目简介" description="为项目将要做什么撰写描述"></el-step>
                 <el-step title="选择项目所属团队" description="团队过多可以搜索寻找"></el-step>
+                <el-step title="输入项目简介" description="为项目将要做什么撰写描述"></el-step>
               </el-steps>
             </div></el-col>
             <!--放置输入框-->
@@ -191,11 +191,10 @@ export default {
     }
   },mounted() { //钩子
     const id=this.$store.state.userid;
-    console.log(id);
     let that=this;
     this.$axios.get({
-      url: '/user',
-      method: 'get', // 默认值
+      url: '/',
+      method: 'post',
       params: {
         userid:id
       },
@@ -203,6 +202,10 @@ export default {
           switch (res.data.errornumber) {
             case 0:
               that.teamlist=res.data.teamlist;
+              var i=0;
+              for(i=0;i<that.teamlist.length;i++){
+                that.options.push( {value:that.teamlist[i],label:that.teamlist[i]});
+              }
               break;
             case 1:
               this.$message.error("请求方式错误");

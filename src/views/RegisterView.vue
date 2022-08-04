@@ -67,29 +67,25 @@ export default {
         this.$message.warning("请输入真实姓名和昵称");
         return;
       }
+      let that=this;
+      console.log('123')
       this.$axios({
         method: 'post',
-        url: '',
+        url: '/register/',
         data: qs.stringify({
-          username:this.form.username,
-          usernickname:this.form.usernickname,
-          email: this.form.email,
-          password1: this.form.password1,
-          password2:this.form.password2
+          username:that.form.username,
+          usernickname:that.form.usernickname,
+          email: that.form.email,
+          password_1: that.form.password1,
+          password_2:that.form.password2
         })
       })
           .then(res => {
             switch (res.data.errornumber) {
               case 0:{
                 this.$message.success("注册成功！");
-                /* 从 localStorage 中读取 preRoute 键对应的值 */
-                const history_pth = localStorage.getItem('preRoute');
                 setTimeout(() => {
-                  if (history_pth == null || history_pth === '/login') {
                     this.$router.push('/login');
-                  } else {
-                    this.$router.push({ path: history_pth });
-                  }
                 }, 1000);
                 break;}
               case 1:
@@ -109,9 +105,9 @@ export default {
           .catch(err => {
             console.log(err);
           })
+      this.$router.push('/login');
     },
     toLogin: function () {
-      // 跳转登陆路由
       this.$router.push('/login');
     }
   }
