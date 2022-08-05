@@ -3,9 +3,9 @@
 
     <div class="menu">
       <button id="back" @click="back">返回</button>
-      <button id="new">新建</button>
+      <button id="new">清空</button>
       <button id="save">保存</button>
-      <button id="delet">删除</button>
+      <!--button id="delet">删除</button-->
     </div>
     <div class="container">
       <div class="options">
@@ -254,6 +254,7 @@ export default{
 
   mounted(){
     let id=this.$store.state.projectid;
+    let that=this;
     this.$axios({
       url: '/edittext/',
       method: 'post',
@@ -263,14 +264,15 @@ export default{
     }).then(res => {
       switch (res.data.errornumber) {
         case 0:
-          this.msg=res.data.projecttext;
+          that.msg=res.data.projecttext;
           //console.log('初始化');
-          //console.log(this.msg);
+          console.log('请求体'+that.msg);
+          this.initializer(that.msg);
           break;
       }
     })
-    let that=this;
-    that.initializer(this.msg);
+    //console.log('初始化'+that.msg);
+    //if (this.msg != null)document.getElementById('text-input').innerHTML = this.msg;
   }
 }
 </script>
@@ -288,15 +290,19 @@ body {
 }
 
 .menu {
-  height: 45px;
-  border: 1px solid black;
+  margin-top: 640px;
+  height: 30px;
+  /*border: 1px solid black;*/
+  padding-left:600px ;
   width: 100%;
+  background-color: white;
 }
 
 .menu button {
   float: left;
-  width: 50px;
-
+  width: 80px;
+  margin-right: 30px ;
+  background-color: white;
 }
 .menu #back {
   width: 80px;

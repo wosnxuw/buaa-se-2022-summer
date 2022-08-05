@@ -4,7 +4,7 @@
       <div class="button-menu">
         <button class="back" @click="back">返回</button>
         <button class="output">导出</button>
-        <button class="save">保存</button>
+        <!--button class="save">保存</button-->
       </div>
       <div class="element-menu">
         <div class="element-title">元素</div>
@@ -99,7 +99,7 @@ export default {
             var y2 = e.pageY;
             var comp2 = document.createElement("div");
             var tet = document.createElement('textarea');
-            comp2.style = 'position: absolute;border: 1px solid rgba(0, 0, 0, .7);'
+            comp2.style = 'position: absolute;'
             comp2.appendChild(tet);
             comp2.style.width = w2 + 'px';
             comp2.style.height = h2 + 'px';
@@ -229,6 +229,15 @@ export default {
 </script>
 
 <style scoped>
+#rectangle,#text,#line{
+  width: 200px;
+  height: 30px;
+  display: block;
+  font-size: 16px;
+  line-height: 30px;
+  margin-top: 23px;
+  margin-left: 19px;
+}
 .main-box {
   width: 1200px;
   height: 500px;
@@ -252,7 +261,7 @@ export default {
   float: left;
   width: 300px;
   height:500px;
-  background-color: gray;
+  background-color: skyblue;
 }
 .button-menu {
   width: 200px;
@@ -280,10 +289,12 @@ export default {
   border-bottom: 1px solid black;
   font-size: 15px;
   line-height: 20px;
+  background-color: skyblue;
 }
 
 .element-box {
   height: 177px;
+  background-color: skyblue;
 }
 
 .center-style {
