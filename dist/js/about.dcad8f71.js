@@ -1,0 +1,2 @@
+"use strict";(self["webpackChunkbuaa_se_2022_summer"]=self["webpackChunkbuaa_se_2022_summer"]||[]).push([[443],{3862:function(e,u,n){n.r(u),n.d(u,{default:function(){return i}});var t=function(){var e=this,u=e._self._c;return u("el-empty",{attrs:{description:"你来到了荒地"}})},s=[],r={name:"AboutView"},a=r,l=n(1001),c=(0,l.Z)(a,t,s,!1,null,null,null),i=c.exports}}]);
+//# sourceMappingURL=about.dcad8f71.js.map
