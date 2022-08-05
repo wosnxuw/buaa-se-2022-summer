@@ -56,6 +56,7 @@ import qs from "qs";
 
 
 export default {
+  inject: ['reload'],
   name: "ManageRubbish",
   data() {
     return {
@@ -99,7 +100,7 @@ export default {
       this.$router.push('/manageProject');
     },
     showrubbish: function () {
-      this.$router.push('/manageRubbish');
+      //this.$router.push('/manageRubbish');
     },
     showAdd:function(){
       this.$router.push('/addProject');
@@ -121,7 +122,7 @@ export default {
               switch (res.data.errornumber) {
                 case 0:
                   this.$message.success("删除项目成功！");
-                  this.$router.push('/manageRubbish');
+                  this.reload();
                   break;
                 case 1:
                   this.$message.error("请求方式错误");
@@ -150,7 +151,7 @@ export default {
             switch (res.data.errornumber) {
               case 0:
                 this.$message.success("恢复项目成功！");
-                this.$router.push('/manageRubbish');
+                this.reload();
                 break;
               case 1:
                 this.$message.error("请求方式错误");
@@ -164,7 +165,7 @@ export default {
   },
   mounted() { //钩子
     const id=this.$store.state.userid;
-    console.log(id);
+    //console.log(id);
     let that=this;
     this.$axios({
       url: '/initialgarbage/',
@@ -178,9 +179,9 @@ export default {
               that.projectlist=res.data.projectnamelist;
               that.projectidlist=res.data.projectidlist;
               that.teamlist=res.data.teamlist;
-              console.log(that.projectlist);
-              console.log(that.projectidlist);
-              console.log(that.teamlist);
+              //console.log(that.projectlist);
+              //console.log(that.projectidlist);
+              //console.log(that.teamlist);
               var max = that.projectlist.length;
               for(var i=0; i<max;i++){
                 that.tableData.push({projname: that.projectlist[i] ,teamname:that.teamlist[i] });
@@ -192,7 +193,7 @@ export default {
           }
         }
     );
-    console.log('dead')
+    //console.log('dead')
   },
   computed:{
     getByProjectName(name){

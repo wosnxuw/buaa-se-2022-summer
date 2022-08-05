@@ -269,8 +269,8 @@ export default{
           break;
       }
     })
-    var f =this.msg;
-    this.initializer(f);
+    let that=this;
+    that.initializer(this.msg);
   }
 }
 </script>

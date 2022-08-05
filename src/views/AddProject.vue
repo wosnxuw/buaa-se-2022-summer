@@ -146,7 +146,7 @@ export default {
       this.$router.push('/manageRubbish');
     },
     showAdd:function(){
-      this.$router.push('/addProject');
+      //this.$router.push('/addProject');
     },
     addproj:function () {
       this.$axios({
@@ -177,7 +177,7 @@ export default {
   },mounted() { //钩子
     const id=this.$store.state.userid;
     let that=this;
-    console.log('abc');
+    //console.log('abc');
     this.$axios({
       url: '/getteammember/',
       method: 'post',
@@ -192,7 +192,7 @@ export default {
               for(i=0;i<that.teamlist.length;i++){
                 that.options.push( {value:that.teamlist[i],label:that.teamlist[i]});
               }
-              console.log(that.options);
+              //console.log(that.options);
               break;
             case 1:
               this.$message.error("请求方式错误");

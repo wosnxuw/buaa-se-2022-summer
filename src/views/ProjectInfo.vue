@@ -56,7 +56,7 @@ export default {
       this.$router.push('/manageProject');
     },
     todraw(){
-      this.$router.push('/about');
+      this.$router.push('/design');
     },
     todoc(){
       this.$router.push('/documentEdit');
@@ -65,8 +65,8 @@ export default {
   },
   mounted() {
     let id = this.$store.state.projectid;
-    console.log('在项目界面');
-    console.log(id);
+    //console.log('在项目界面');
+    //console.log(id);
     let that=this;
     this.$axios({
       url: '/initialprojectinformation/',

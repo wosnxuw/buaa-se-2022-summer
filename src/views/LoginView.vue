@@ -101,12 +101,6 @@ export default {
 #login >>> .el-input__inner {
   font-family: 'Noto Serif SC', serif;
 }
-
-#login .logo {
-  cursor: pointer;
-  overflow: hidden;
-  height: 150px;
-}
 #login .wrap {
   width: 300px;
   height: 315px;

@@ -68,7 +68,7 @@ export default {
         return;
       }
       let that=this;
-      console.log('123')
+      //console.log('123')
       this.$axios({
         method: 'post',
         url: '/register/',
@@ -125,11 +125,6 @@ export default {
   font-family: 'Noto Serif SC', serif;
 }
 
-#register .logo {
-  cursor: pointer;
-  overflow: hidden;
-  height: 150px;
-}
 #register .wrap {
   width: 300px;
   height: 500px;

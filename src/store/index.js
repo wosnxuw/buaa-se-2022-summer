@@ -6,8 +6,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    projectid:0,
-    userid:123
+    projectid:-1,
+    userid:-1
   },
   getters: {
   },

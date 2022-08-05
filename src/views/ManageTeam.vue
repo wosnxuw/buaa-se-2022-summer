@@ -50,6 +50,7 @@
 <script>
 import qs from "qs";
 export default {
+  inject: ['reload'],
   name: "ManageTeam",
   data() {
     return {
@@ -63,7 +64,7 @@ export default {
   },
   methods:{
     toManageTeam(){
-      this.$router.push('/manageTeam');
+      //this.$router.push('/manageTeam');
     },/*路由未定*/
     logout() {
       this.$confirm('您即将退出登陆, 是否继续?', '提示', {
@@ -101,7 +102,7 @@ export default {
         cancelButtonText: '取消',
       }).then(({ value }) => {
         const id=this.$store.state.userid;
-        console.log(id);
+        //console.log(id);
         this.$axios({
           method: 'post',
           url: '/createteam/',
@@ -114,7 +115,8 @@ export default {
               switch (res.data.result) {
                 case 0:
                   this.$message.success("新建团队成功，团队名为:"+value);
-                  this.$router.push('/manageTeam');
+                  //this.$router.push('/manageTeam');
+                  this.reload();
                   break;
                 case 1:
                   this.$message.error("请求方式错误");
@@ -136,7 +138,7 @@ export default {
           message: '取消输入'
         });
       });
-      this.$router.push('/manageTeam');
+      //this.$router.push('/manageTeam');
     },
     invite(index){
       this.$prompt('请输入被邀请成员的邮箱', '提示', {
@@ -145,9 +147,9 @@ export default {
       }).then(({ value }) => {
         var that=this;
         let id=this.$store.state.userid;
-        console.log(id);
-        console.log(value);
-        console.log(that.teamlist[index]);
+        //console.log(id);
+        //console.log(value);
+        //console.log(that.teamlist[index]);
         this.$axios({
           method: 'post',
           url: '/inviteuser/',
@@ -161,7 +163,8 @@ export default {
               switch (res.data.result) {
                 case 0:
                   this.$message.success("添加成员成功");
-                  this.$router.push('/manageTeam');
+                  //this.$router.push('/manageTeam');
+                  this.reload();
                   break;
                 case 2:
                   this.$message.error("不是管理员");
@@ -187,7 +190,7 @@ export default {
     toManager(index,index2){
       var that=this;
       let id=this.$store.state.userid;
-      console.log(that.emaillist[index][index2]);
+      //console.log(that.emaillist[index][index2]);
       this.$axios({
         method: 'post',
         url: '/setadmin/',
@@ -201,7 +204,8 @@ export default {
             switch (res.data.result) {
               case 0:
                 this.$message.success('已提升'+that.emaillist[index][index2]+'为管理员')
-                this.$router.push('/manageTeam');
+                //this.$router.push('/manageTeam');
+                this.reload();
                 break;
               case 1:
                 this.$message.error("请求方式错误");
@@ -218,7 +222,7 @@ export default {
     deleteUser(index,index2){
       var that=this;
       let id=this.$store.state.userid;
-      console.log(that.emaillist[index][index2]);
+      //console.log(that.emaillist[index][index2]);
       this.$axios({
         method: 'post',
         url: '/deleteuser/',
@@ -232,7 +236,8 @@ export default {
             switch (res.data.result) {
               case 0:
                 this.$message.success('已移除'+that.emaillist[index][index2])
-                this.$router.push('/manageTeam');
+                //this.$router.push('/manageTeam');
+                this.reload();
                 break;
               case 1:
                 this.$message.error("请求方式错误");
@@ -246,7 +251,7 @@ export default {
   },
   mounted() {
     const id=this.$store.state.userid;
-    console.log(id);
+    //console.log(id);
     let that=this;
     this.$axios({
       url: '/getteammember/',
@@ -255,15 +260,15 @@ export default {
         now_id:id
       })
     }).then(res => {
-          console.log('a');
-          console.log(res.data.result);
+          //console.log('a');
+          //console.log(res.data.result);
           switch (res.data.result) {
             case 0:
-              console.log('a');
+              //console.log('a');
               that.teamlist=res.data.team_list;
               that.userlist=res.data.big_list;
               that.emaillist=res.data.email_list;
-              console.log(res.data.team_list);
+              //console.log(res.data.team_list);
               break;
           }
         }
@@ -277,13 +282,13 @@ export default {
     }).then(res => {
           switch (res.data.result) {
             case 0:
-              console.log('b');
+              //console.log('b');
               that.managerlist=res.data.big_list;
               break;
           }
         }
     );
-    console.log("c");
+    //console.log("c");
   },
   watch:{
     $router(){

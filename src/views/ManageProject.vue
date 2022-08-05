@@ -58,6 +58,7 @@
 <script>
 import qs from "qs";
 export default {
+  inject: ['reload'],
   name: "ManageProject",
   data() {
     return {
@@ -97,7 +98,8 @@ export default {
       });
     },
     showproj: function () {
-      this.$router.push('/manageProject');
+      //this.$router.push('/manageProject');
+      return;
     },
     showrubbish: function () {
       this.$router.push('/manageRubbish');
@@ -116,7 +118,7 @@ export default {
           message: '你把项目更名为: ' + value
         });
         let that=this;
-        console.log(that.projectidlist[index]);
+        //console.log(that.projectidlist[index]);
         this.$axios({
           method: 'post',
           url: '/renameproject/',
@@ -128,9 +130,8 @@ export default {
             .then(res => {
               switch (res.data.errornumber) {
                 case 0:
-                  console.log(that.projectidlist[index]);
-                  this.$message.success("改名成功！");
-                  this.$router.push('/manageProject')
+                  //console.log(that.projectidlist[index]);
+                  this.reload();
                   break;
                 case 1:
                   this.$message.error("失败");
@@ -155,7 +156,7 @@ export default {
             switch (res.data.errornumber) {
               case 0:
                 this.$message.success("移动到回收站成功！");
-                this.$router.push('/manageProject')
+                this.reload();
                 break;
               case 1:
                 this.$message.error("请求方式错误");
@@ -167,15 +168,15 @@ export default {
           })
     },
     handleLook(index) {
-      console.log('项目管理');
-      console.log(index);
+      //console.log('项目管理');
+      //console.log(index);
       this.$store.state.projectid= this.projectidlist[index];
       this.$router.push('/project');
     }
   },
   mounted() { //钩子
     const id=this.$store.state.userid;
-    console.log(id);
+    //console.log(id);
     let that=this;
     this.$axios({
       url: '/initialproject/',
@@ -189,9 +190,9 @@ export default {
               that.projectlist=res.data.projectnamelist;
               that.projectidlist=res.data.projectidlist;
               that.teamlist=res.data.teamlist;
-              console.log(that.projectlist);
-              console.log(that.projectidlist);
-              console.log(that.teamlist);
+              //console.log(that.projectlist);
+              //console.log(that.projectidlist);
+              //console.log(that.teamlist);
               var max = that.projectlist.length;
               for(var i=0; i<max;i++){
                 that.tableData.push({projname: that.projectlist[i] ,teamname:that.teamlist[i] });
@@ -203,7 +204,7 @@ export default {
           }
         }
     );
-    console.log('dead')
+    //console.log('dead')
   },
   computed:{
   }
