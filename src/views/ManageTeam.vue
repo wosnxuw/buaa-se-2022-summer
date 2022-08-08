@@ -6,8 +6,7 @@
         <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal"
                  background-color="#545c64"
                  text-color="#fff"
-                 active-text-color="#ffd04b"
-                 @select="handleSelect">
+                 active-text-color="#ffd04b">
           <el-menu-item index="-1" @click="toChoose">返回</el-menu-item>
           <el-menu-item index="-2" @click="toProject">项目管理</el-menu-item>
           <el-menu-item index="-3" @click="toManageTeam">管理团队</el-menu-item>
@@ -15,17 +14,10 @@
           <el-menu-item index="-5" text-color="#eb5451">
             <el-button type="text" @click="logout">退出登陆</el-button>
           </el-menu-item>
-          <!--el-submenu index="-6">
-            <template slot="title">{{ team }}</template>
-            <div v-for="(item,index) in teamlist" :key="item">
-              <el-menu-item :index="index.toString()">{{ index }}---{{ item }}</el-menu-item>
-            </div>
-          </el-submenu-->
         </el-menu>
       </el-header>
       <el-container>
         <el-main>
-          <el-button type="text" @click="newTeam">新建队伍</el-button>
           <el-button type="text" @click="invite">邀请成员</el-button>
           <el-row :gutter="20">
             <el-col :span="16" :offset="4">
@@ -33,8 +25,7 @@
                 <el-table
                     :data="tableData"
                     border
-                    style="width: 100%"
-                    :row-class-name="tableRowClassName">
+                    style="width: 100%">
                   <el-table-column
                       prop="name"
                       label="真实姓名"
@@ -79,7 +70,6 @@ export default {
   name: "ManageTeam",
   data() {
     return {
-      team: '',
       /*标记哪个灯应该亮*/
       activeIndex: '-3',
       /*从后端获取的数据*/
@@ -104,20 +94,9 @@ export default {
     };
   },
   methods: {
-    /*key是index中的值*/
-    handleSelect(key) {
-      /*注意：此函数点击任意一个导航栏图标都会触发，因此，不要使得key超出范围导致vuex改变*/
-      if (key >= 0) {/*说明选择了一个队伍，而不是跳转链接*/
-        this.$store.state.teamname = this.teamlist[key];
-        console.log(key);
-        console.log('已经选择:保存至vuex' + this.$store.state.teamname);
-        this.reload();
-      }
-      console.log('该跳转了');
-    },
     toManageTeam() {
       //this.$router.push('/manageTeam');
-    },/*路由未定*/
+    },
     toDocs(){
       this.$router.push('/docs');
     },
@@ -148,63 +127,20 @@ export default {
     toChoose(){
       this.$router.push('/chooseTeam');
     },
-    newTeam() {
-      this.$prompt('请输入队伍名', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-      }).then(({value}) => {
-        const id = this.$store.state.userid;
-        //console.log(id);
-        this.$axios({
-          method: 'post',
-          url: '/createteam/',
-          data: qs.stringify({
-            now_id: id,
-            team_name: value
-          })
-        })
-            .then(res => {
-              switch (res.data.result) {
-                case 0:
-                  this.$message.success("新建团队成功，团队名为:" + value);
-                  //this.$router.push('/manageTeam');
-                  this.reload();
-                  break;
-                case 1:
-                  this.$message.error("请求方式错误");
-                  break;
-                case 2:
-                  this.$message.error("团队名已存在");
-                  break;
-                case 3:
-                  this.$message.error("用户不存在");
-                  break;
-              }
-            })
-            .catch(err => {
-              console.log(err);
-            })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '取消输入'
-        });
-      });
-    },
     invite() {
       this.$prompt('请输入被邀请成员的邮箱', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
       }).then(({value}) => {
+        let that =this;
         let id = this.$store.state.userid;
-        let teamname = this.$store.state.teamname;
         this.$axios({
           method: 'post',
           url: '/inviteuser/',
           data: qs.stringify({
             now_userid: id,
             invite_useremail: value,
-            teamname: teamname,
+            teamid: that.$store.state.teamid,
           })
         })
             .then(res => {
@@ -237,13 +173,12 @@ export default {
     toManager(index) {
       let that = this;
       let id = this.$store.state.userid;
-      let teamname = this.$store.state.teamname;
       this.$axios({
         method: 'post',
         url: '/setadmin/',
         data: qs.stringify({
           id: id,
-          teamname: teamname,
+          teamid: that.$store.state.teamid,
           change_useremail: that.emaillist[index]
         })
       })
@@ -268,13 +203,12 @@ export default {
     deleteUser(index) {
       let that = this;
       let id = this.$store.state.userid;
-      let teamname = this.$store.state.teamname;
       this.$axios({
         method: 'post',
         url: '/deleteuser/',
         data: qs.stringify({
           id: id,
-          teamname: teamname,
+          teamid: that.$store.state.teamid,
           delete_useremail: that.emaillist[index]
         })
       })
@@ -292,14 +226,7 @@ export default {
           .catch(err => {
             console.log(err);
           })
-    },
-    tableRowClassName(rowIndex) {
-      if (rowIndex === 1) {
-        return 'success-row';
-      }
-      return '';
     }
-
   },
   /*初始化*/
   mounted() {

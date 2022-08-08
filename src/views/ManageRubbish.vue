@@ -5,8 +5,7 @@
         <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal"
                  background-color="#545c64"
                  text-color="#fff"
-                 active-text-color="#ffd04b"
-                 @select="handleSelect">
+                 active-text-color="#ffd04b">
           <el-menu-item index="-1" @click="toChoose">返回</el-menu-item>
           <el-menu-item index="-2" @click="toProject">项目管理</el-menu-item>
           <el-menu-item index="-3" @click="toManageTeam">管理团队</el-menu-item>
@@ -88,14 +87,9 @@ export default {
   name: "ManageRubbish",
   data() {
     return {
-      team: '',
       search: '',
-      /*标题选择用变量*/
       activeIndex: '-2',
-      /*三个列表*/
-      projectlist: [],
       projectidlist: [],
-      teamlist: [],
       /*整顿好的项目列表，待展示*/
       tableData: [
         {
@@ -114,16 +108,6 @@ export default {
     }
   },
   methods: {
-    handleSelect(key) {
-      /*注意：此函数点击任意一个导航栏图标都会触发，因此，不要使得key超出范围导致vuex改变*/
-      if (key >= 0) {/*说明选择了一个队伍，而不是跳转链接*/
-        this.$store.state.teamname = this.teamlist[key];
-        console.log(key);
-        console.log('已经选择:保存至vuex' + this.$store.state.teamname);
-        this.reload();
-      }
-      console.log('该跳转了');
-    },
     toDocs(){
       this.$router.push('/docs');
     },
@@ -221,28 +205,20 @@ export default {
     }
   },
   mounted() { //钩子
-    const id = this.$store.state.userid;
-    //console.log(id);
-    this.team = this.$store.state.teamname;
     let that = this;
     this.$axios({
       url: '/initialgarbage/',
       method: 'post',
       data: qs.stringify({
-        userid: id
+        teamid: that.$store.state.teamid
       })
     }).then(res => {
           switch (res.data.errornumber) {
             case 0:
-              that.projectlist = res.data.projectnamelist;
               that.projectidlist = res.data.projectidlist;
-              that.teamlist = res.data.teamlist;
-              //console.log(that.projectlist);
-              //console.log(that.projectidlist);
-              //console.log(that.teamlist);
               var max = that.projectlist.length;
               for (var i = 0; i < max; i++) {
-                that.tableData.push({projname: that.projectlist[i], teamname: that.teamlist[i]});
+                that.tableData.push({projname: res.data.projectlist[i] ,createtime:res.data.createtimelist[i]});
               }
               break;
             case 1:
@@ -251,20 +227,8 @@ export default {
           }
         }
     );
-    //console.log('dead')
   },
   computed: {
-    getByProjectName(name) {
-      let index = 0;
-      let item;
-      for (item in this.projectlist) {
-        if (item == name) {
-          break;
-        }
-        index++;
-      }
-      return this.projectidlist.indexOf(index)
-    }
   }
 }
 </script>

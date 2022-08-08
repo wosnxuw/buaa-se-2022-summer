@@ -5,8 +5,7 @@
         <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal"
                  background-color="#545c64"
                  text-color="#fff"
-                 active-text-color="#ffd04b"
-                 @select="handleSelect">
+                 active-text-color="#ffd04b">
           <el-menu-item index="-1" @click="toChoose">返回</el-menu-item>
           <el-menu-item index="-2" @click="toProject">项目管理</el-menu-item>
           <el-menu-item index="-3" @click="toManageTeam">管理团队</el-menu-item>
@@ -119,16 +118,6 @@ export default {
       this.a=this.c=false;
       this.b=true;
     },
-    handleSelect(key) {
-      /*注意：此函数点击任意一个导航栏图标都会触发，因此，不要使得key超出范围导致vuex改变*/
-      if (key>=0){/*说明选择了一个队伍，而不是跳转链接*/
-        this.$store.state.teamname=this.teamlist[key];
-        console.log(key);
-        console.log('已经选择:保存至vuex'+this.$store.state.teamname);
-        this.reload();
-      }
-      console.log('该跳转了');
-    },
     logout() {
       this.$confirm('您即将退出登陆, 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -168,13 +157,14 @@ export default {
       this.$router.push('/docs');
     },
     addproj () {
+      let that = this;
       this.$axios({
         method: 'post',
         url: '/insertproject/',
         data: qs.stringify({
           projectname:this.form.projectname,
           projectdiscrp:this.form.projectdiscrp,
-          teamname:this.value
+          teamid:that.$store.state.teamid
         })
       })
           .then(res => {
@@ -193,34 +183,9 @@ export default {
             console.log(err);
           })
     }
-  },mounted() { //钩子
-    const id=this.$store.state.userid;
-    this.team=this.$store.state.teamname;
-    console.log('新建项目：初始化'+this.$store.state.teamname);
-    let that=this;
-    //console.log('abc');
-    this.$axios({
-      url: '/getteammember/',
-      method: 'post',
-      data: qs.stringify({
-        now_id:id
-      })
-    }).then(res => {
-          switch (res.data.result) {
-            case 0:
-              that.teamlist=res.data.team_list;
-              var i=0;
-              for(i=0;i<that.teamlist.length;i++){
-                that.options.push( {value:that.teamlist[i],label:that.teamlist[i]});
-              }
-              //console.log(that.options);
-              break;
-            case 1:
-              this.$message.error("请求方式错误");
-              break;
-          }
-        }
-    );
+  },
+  mounted() { //钩子
+    /*什么都不用做*/
   }
 }
 </script>
