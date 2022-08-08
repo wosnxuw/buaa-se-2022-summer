@@ -145,7 +145,7 @@ export default{
       this.highlighter(spacingButtons, true);
       this.highlighter(formatButtons, false);
       this.highlighter(scriptButtons, true);
-      console.log(init_msg);
+      //console.log(init_msg);
       if (init_msg != null)document.getElementById('text-input').innerHTML = init_msg;
 
       fontList.map((value) => {
@@ -183,7 +183,7 @@ export default{
       });
 
       saveText.addEventListener("click", ()=>{
-        console.log(JSON.stringify(document.getElementById('text-input').innerHTML));
+        //console.log(JSON.stringify(document.getElementById('text-input').innerHTML));
         let message = document.getElementById('text-input').innerHTML;
         if (message === ''){
           alert('保存内容不能为空');
@@ -266,7 +266,7 @@ export default{
         case 0:
           that.msg=res.data.projecttext;
           //console.log('初始化');
-          console.log('请求体'+that.msg);
+          //console.log('请求体'+that.msg);
           this.initializer(that.msg);
           break;
       }

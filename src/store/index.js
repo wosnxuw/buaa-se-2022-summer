@@ -7,15 +7,13 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     projectid:-1,
-    userid:-1
+    userid:-1,
+    teamname:'选择队伍',
+    teamid:-1
   },
   getters: {
   },
   mutations: {
-    setprojectid(state,x){
-      state.projectid= x;
-    }
-
   },
   actions: {
     /* 定义清空 localStorage 的方法 */

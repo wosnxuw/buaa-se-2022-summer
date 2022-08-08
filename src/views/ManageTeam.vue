@@ -2,43 +2,67 @@
   <div id="manage" class="manage">
     <el-container>
       <el-header>
+        <!--导航栏部分-->
         <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal"
                  background-color="#545c64"
                  text-color="#fff"
-                 active-text-color="#ffd04b">
-          <el-menu-item index="1" @click="showproj" >项目中心</el-menu-item>
-          <el-menu-item index="2" @click="showrubbish">回收站</el-menu-item>
-          <el-menu-item index="3" @click="showAdd">新建项目</el-menu-item>
-          <el-menu-item index="4" @click="toManageTeam">管理团队</el-menu-item>
-          <el-menu-item index="5" text-color="#eb5451"> <el-button type="text" @click="logout">退出登陆</el-button></el-menu-item>
+                 active-text-color="#ffd04b"
+                 @select="handleSelect">
+          <el-menu-item index="-1" @click="toChoose">返回</el-menu-item>
+          <el-menu-item index="-2" @click="toProject">项目管理</el-menu-item>
+          <el-menu-item index="-3" @click="toManageTeam">管理团队</el-menu-item>
+          <el-menu-item index="-4" @click="toDocs">文档中心</el-menu-item>
+          <el-menu-item index="-5" text-color="#eb5451">
+            <el-button type="text" @click="logout">退出登陆</el-button>
+          </el-menu-item>
+          <!--el-submenu index="-6">
+            <template slot="title">{{ team }}</template>
+            <div v-for="(item,index) in teamlist" :key="item">
+              <el-menu-item :index="index.toString()">{{ index }}---{{ item }}</el-menu-item>
+            </div>
+          </el-submenu-->
         </el-menu>
       </el-header>
       <el-container>
         <el-main>
           <el-button type="text" @click="newTeam">新建队伍</el-button>
+          <el-button type="text" @click="invite">邀请成员</el-button>
           <el-row :gutter="20">
             <el-col :span="16" :offset="4">
-              <div>
-                <el-collapse v-model="activeName" accordion>
-                  <!--collapse-item和里面的内容都需要v-for循环-->
-                  <div  v-for="(item,index) in teamlist" :key="item">
-                    <el-collapse-item :title=item :name=index >
-                      <el-button type="success" plain @click="invite(index)"> 邀请成员 </el-button>
-                      <div v-for="(item2,index2) in userlist[index]" :key="item2">
-                        <el-divider></el-divider>
-                        {{ item2 }}
-                        <el-button size="mini" class="right" type="primary" plain @click="toManager(index,index2)">变更为管理员</el-button>
-                        <el-button size="mini" class="right"  type="danger" plain @click="deleteUser(index,index2)">移出团队</el-button>
-                      </div>
-                      <div v-for="(item3) in managerlist[index]" :key="item3">
-                        <el-divider></el-divider>
-                        {{ item3 }}
-                        <el-button size="mini" class="right" type="success" plain disabled>管理员</el-button>
-                      </div>
-                    </el-collapse-item>
-                  </div>
-                </el-collapse>
-              </div>
+              <template>
+                <el-table
+                    :data="tableData"
+                    border
+                    style="width: 100%"
+                    :row-class-name="tableRowClassName">
+                  <el-table-column
+                      prop="name"
+                      label="真实姓名"
+                      width="180">
+                  </el-table-column>
+                  <el-table-column
+                      prop="nickname"
+                      label="昵称"
+                      width="180">
+                  </el-table-column>
+                  <el-table-column
+                      prop="email"
+                      label="邮箱">
+                  </el-table-column>
+                  <el-table-column
+                      label="操作">
+                    <template slot-scope="scope">
+                      <el-button type="text" size="small" v-show="managerlist[scope.$index]" disabled>管理员</el-button>
+                      <el-button @click="toManager(scope.$index)" type="text" size="small"
+                                 v-show="!managerlist[scope.$index]">提升为管理
+                      </el-button>
+                      <el-button @click="deleteUser(scope.$index)" type="text" size="small"
+                                 v-show="!managerlist[scope.$index]">移出团队
+                      </el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </template>
             </el-col>
           </el-row>
         </el-main>
@@ -49,23 +73,54 @@
 
 <script>
 import qs from "qs";
+
 export default {
   inject: ['reload'],
   name: "ManageTeam",
   data() {
     return {
-      activeIndex: '4',
-      activeName: '1',
-      teamlist:[],
-      userlist:[],
-      emaillist:[],
-      managerlist:[]
+      team: '',
+      /*标记哪个灯应该亮*/
+      activeIndex: '-3',
+      /*从后端获取的数据*/
+      namelist: ['张三', '李四'],
+      nicknamelist: ['喜羊羊', '灰太狼'],
+      emaillist: ['bbb@qq.com', 'ccc@qq.com'],
+      managerlist: [
+        true, false
+      ],
+      teamlist: ['add', 'dddc'],
+      tableData: [
+        {
+          name: '张三',
+          nickname: '喜羊羊',
+          email: '123@123.com'
+        }, {
+          name: '李四',
+          nickname: '美羊羊',
+          email: '234@123.com'
+        }
+      ]
     };
   },
-  methods:{
-    toManageTeam(){
+  methods: {
+    /*key是index中的值*/
+    handleSelect(key) {
+      /*注意：此函数点击任意一个导航栏图标都会触发，因此，不要使得key超出范围导致vuex改变*/
+      if (key >= 0) {/*说明选择了一个队伍，而不是跳转链接*/
+        this.$store.state.teamname = this.teamlist[key];
+        console.log(key);
+        console.log('已经选择:保存至vuex' + this.$store.state.teamname);
+        this.reload();
+      }
+      console.log('该跳转了');
+    },
+    toManageTeam() {
       //this.$router.push('/manageTeam');
     },/*路由未定*/
+    toDocs(){
+      this.$router.push('/docs');
+    },
     logout() {
       this.$confirm('您即将退出登陆, 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -87,34 +142,31 @@ export default {
         });
       });
     },
-    showproj: function () {
+    toProject () {
       this.$router.push('/manageProject');
     },
-    showrubbish: function () {
-      this.$router.push('/manageRubbish');
-    },
-    showAdd:function(){
-      this.$router.push('/addProject');
+    toChoose(){
+      this.$router.push('/chooseTeam');
     },
     newTeam() {
       this.$prompt('请输入队伍名', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-      }).then(({ value }) => {
-        const id=this.$store.state.userid;
+      }).then(({value}) => {
+        const id = this.$store.state.userid;
         //console.log(id);
         this.$axios({
           method: 'post',
           url: '/createteam/',
           data: qs.stringify({
-            now_id:id,
-            team_name:value
+            now_id: id,
+            team_name: value
           })
         })
             .then(res => {
               switch (res.data.result) {
                 case 0:
-                  this.$message.success("新建团队成功，团队名为:"+value);
+                  this.$message.success("新建团队成功，团队名为:" + value);
                   //this.$router.push('/manageTeam');
                   this.reload();
                   break;
@@ -138,32 +190,27 @@ export default {
           message: '取消输入'
         });
       });
-      //this.$router.push('/manageTeam');
     },
-    invite(index){
+    invite() {
       this.$prompt('请输入被邀请成员的邮箱', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-      }).then(({ value }) => {
-        var that=this;
-        let id=this.$store.state.userid;
-        //console.log(id);
-        //console.log(value);
-        //console.log(that.teamlist[index]);
+      }).then(({value}) => {
+        let id = this.$store.state.userid;
+        let teamname = this.$store.state.teamname;
         this.$axios({
           method: 'post',
           url: '/inviteuser/',
           data: qs.stringify({
-            now_userid:id,
-            invite_useremail:value,
-            teamname:that.teamlist[index],
+            now_userid: id,
+            invite_useremail: value,
+            teamname: teamname,
           })
         })
             .then(res => {
               switch (res.data.result) {
                 case 0:
                   this.$message.success("添加成员成功");
-                  //this.$router.push('/manageTeam');
                   this.reload();
                   break;
                 case 2:
@@ -187,24 +234,23 @@ export default {
         });
       });
     },
-    toManager(index,index2){
-      var that=this;
-      let id=this.$store.state.userid;
-      //console.log(that.emaillist[index][index2]);
+    toManager(index) {
+      let that = this;
+      let id = this.$store.state.userid;
+      let teamname = this.$store.state.teamname;
       this.$axios({
         method: 'post',
         url: '/setadmin/',
         data: qs.stringify({
-          id:id,
-          teamname:that.teamlist[index],
-          change_useremail:that.emaillist[index][index2]
+          id: id,
+          teamname: teamname,
+          change_useremail: that.emaillist[index]
         })
       })
           .then(res => {
             switch (res.data.result) {
               case 0:
-                this.$message.success('已提升'+that.emaillist[index][index2]+'为管理员')
-                //this.$router.push('/manageTeam');
+                this.$message.success('已提升')
                 this.reload();
                 break;
               case 1:
@@ -219,24 +265,23 @@ export default {
             console.log(err);
           })
     },
-    deleteUser(index,index2){
-      var that=this;
-      let id=this.$store.state.userid;
-      //console.log(that.emaillist[index][index2]);
+    deleteUser(index) {
+      let that = this;
+      let id = this.$store.state.userid;
+      let teamname = this.$store.state.teamname;
       this.$axios({
         method: 'post',
         url: '/deleteuser/',
         data: qs.stringify({
-          now_userid:id,
-          teamname:that.teamlist[index],
-          delete_useremail:that.emaillist[index][index2]
+          id: id,
+          teamname: teamname,
+          delete_useremail: that.emaillist[index]
         })
       })
           .then(res => {
             switch (res.data.result) {
               case 0:
-                this.$message.success('已移除'+that.emaillist[index][index2])
-                //this.$router.push('/manageTeam');
+                this.$message.success('已移除')
                 this.reload();
                 break;
               case 1:
@@ -247,57 +292,45 @@ export default {
           .catch(err => {
             console.log(err);
           })
+    },
+    tableRowClassName(rowIndex) {
+      if (rowIndex === 1) {
+        return 'success-row';
+      }
+      return '';
     }
+
   },
+  /*初始化*/
   mounted() {
-    const id=this.$store.state.userid;
-    //console.log(id);
-    let that=this;
+    let that = this;
     this.$axios({
-      url: '/getteammember/',
+      url: '//',
       method: 'post',
       data: qs.stringify({
-        now_id:id
-      })
-    }).then(res => {
-          //console.log('a');
-          //console.log(res.data.result);
-          switch (res.data.result) {
-            case 0:
-              //console.log('a');
-              that.teamlist=res.data.team_list;
-              that.userlist=res.data.big_list;
-              that.emaillist=res.data.email_list;
-              //console.log(res.data.team_list);
-              break;
-          }
-        }
-    );
-    this.$axios({
-      url: '/getteamadmin/',
-      method: 'post',
-      data: qs.stringify({
-        now_id:id
+        teamid: that.$store.state.teamid
       })
     }).then(res => {
           switch (res.data.result) {
             case 0:
-              //console.log('b');
-              that.managerlist=res.data.big_list;
+              that.namelist = res.data.namelist;
+              that.nicknamelist = res.data.nicknamelist;
+              that.emaillist = res.data.emaillist;
+              that.managerlist = res.data.managerlist;
+              var i = 0;
+              for (i = 0; i < res.data.emaillist.length; i++) {
+                that.tableData.push({name: that.namelist[i], nickname: that.nicknamelist[i], email: that.emaillist[i]});
+              }
               break;
           }
         }
     );
-    //console.log("c");
   },
-  watch:{
-    $router(){
-      this.getData(); //当对象改变，执行操作获取新数据
-    }
-  }
 }
 </script>
 
 <style scoped>
-
+.el-table .success-row {
+  background: #f0f9eb;
+}
 </style>

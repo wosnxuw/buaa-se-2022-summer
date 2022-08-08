@@ -9,17 +9,11 @@ const routes = [
     path: '/',
     name: 'home',
     component: HomeView,
-    meta: {
-      requireAuth: true
-    }
   },
   {
     path: '/about',
     name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue'),
+    component: () => import( '../views/AboutView.vue'),
   },
   {
     path: '/login',
@@ -35,65 +29,52 @@ const routes = [
     path: '/manageProject',
     name: 'manageProject',
     component: () => import('../views/ManageProject'),
-    meta: {
-      requireAuth: true
-    }
-
   },
   {
     path: '/manageRubbish',
     name: 'manageRubbish',
     component: () => import('../views/ManageRubbish'),
-    meta: {
-      requireAuth: true
-    }
-
   },
   {
     path: '/addProject',
     name: 'addProject',
     component: () => import('../views/AddProject'),
-    meta: {
-      requireAuth: true
-    }
-
   },
   {
     path: '/manageTeam',
     name: 'manageTeam',
     component: () => import('../views/ManageTeam'),
-    meta: {
-      requireAuth: true
-    }
   },
   {
     path: '/project',
     name: 'project',
     component: () => import('../views/ProjectInfo'),
-    meta: {
-      requireAuth: true
-    }
   },
   {
     path: '/documentEdit',
     name: 'documentEdit',
     component: () => import('../views/DocumentEdit'),
-    meta: {
-      requireAuth: true
-    },
   },
   {
     path: '/design',
     name: 'design',
     component: () => import('../views/DesignProject'),
-    meta: {
-      requireAuth: true
-    },
+  },
+  {
+    path: '/chooseTeam',
+    name: 'chooseTeam',
+    component: () => import('../views/ChooseTeam'),
+  },
+  {
+    path: '/docs',
+    name: 'docs',
+    component: () => import('../views/DocsView'),
   }
 ]
 
 const router = new VueRouter({
-  history: createWebHashHistory(process.env.BASE_URL),
+  mode: 'history',
+  base: process.env.BASE_URL,
   routes
 })
 

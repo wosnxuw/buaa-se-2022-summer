@@ -5,45 +5,80 @@
         <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal"
                  background-color="#545c64"
                  text-color="#fff"
-                 active-text-color="#ffd04b">
-          <el-menu-item index="1" @click="showproj" >项目中心</el-menu-item>
-          <el-menu-item index="2" @click="showrubbish">回收站</el-menu-item>
-          <el-menu-item index="3" @click="showAdd">新建项目</el-menu-item>
-          <el-menu-item index="4" @click="toManageTeam">管理团队</el-menu-item>
-          <el-menu-item index="5" text-color="#eb5451"> <el-button type="text" @click="logout">退出登陆</el-button></el-menu-item>
+                 active-text-color="#ffd04b"
+                 @select="handleSelect">
+          <el-menu-item index="-1" @click="toChoose">返回</el-menu-item>
+          <el-menu-item index="-2" @click="toProject">项目管理</el-menu-item>
+          <el-menu-item index="-3" @click="toManageTeam">管理团队</el-menu-item>
+          <el-menu-item index="-4" @click="toDocs">文档中心</el-menu-item>
+          <el-menu-item index="-5" text-color="#eb5451">
+            <el-button type="text" @click="logout">退出登陆</el-button>
+          </el-menu-item>
         </el-menu>
       </el-header>
       <el-container>
+        <el-aside width="200px">
+          <el-menu
+              default-active="1"
+              class="el-menu-vertical-demo">
+            <el-menu-item index="1">
+              <i class="el-icon-menu"></i>
+              <span slot="title" @click="toProject">项目一览</span>
+            </el-menu-item>
+            <el-menu-item index="2">
+              <i class="el-icon-menu"></i>
+              <span slot="title" @click="toRubbish">回收项目</span>
+            </el-menu-item>
+            <el-menu-item index="3">
+              <i class="el-icon-document"></i>
+              <span slot="title" @click="toAdd">新建项目</span>
+            </el-menu-item>
+          </el-menu>
+        </el-aside>
         <el-main>
+          <!--放置文档 表格-->
           <el-table
-              :data="tableData"
+              :data="tableData.filter(data => !search || data.projname.toLowerCase().includes(search.toLowerCase()))"
               border
-              style="width: 80%"
               id="proj-show">
             <el-table-column
                 prop="projname"
                 label="项目名">
             </el-table-column>
             <el-table-column
-                prop="teamname"
-                label="所属团队">
+                prop="createtime"
+                label="创建时间">
             </el-table-column>
-            <el-table-column label="操作" width="300">
+            <el-table-column>
+              <!--eslint-disable-next-line-->
+              <template slot="header" slot-scope="scope">
+                <el-input
+                    v-model="search"
+                    size="mini"
+                    placeholder="输入项目名搜索"/>
+              </template>
               <template slot-scope="scope">
                 <el-button
                     size="mini"
                     type="primary"
+                    icon="el-icon-view"
                     @click="handleLook(scope.$index)">查看
                 </el-button>
                 <el-button
                     size="mini"
-                    icon="el-icon-edit"
+                    icon="el-icon-edit-outline"
                     @click="handleEdit(scope.$index)">重命名
                 </el-button>
                 <el-button
                     size="mini"
+                    icon="el-icon-document-copy"
+                    type="warning" plain
+                    @click="handleEdit(scope.$index)">复制
+                </el-button>
+                <el-button
+                    size="mini"
                     type="danger"
-                    icon="el-icon-delete"
+                    icon="el-icon-document-delete"
                     @click="handleDelete(scope.$index, scope.row)">移到回收站
                 </el-button>
               </template>
@@ -57,25 +92,53 @@
 
 <script>
 import qs from "qs";
+
 export default {
   inject: ['reload'],
   name: "ManageProject",
   data() {
     return {
+      team: '',
       /*标题选择用变量*/
-      activeIndex: '1',
+      search: '',
+      activeIndex: '-2',
       /*三个列表*/
-      projectlist:[],
-      projectidlist:['1','2','3'],
-      teamlist:[],
+      projectlist: ['cccccc', 'ddddddd', 'fffffffffff'],
+      projectidlist: ['1', '2', '3'],
       /*整顿好的项目列表，待展示*/
-      tableData: [],
+      tableData: [
+        {
+          projname: 'ffff',
+          createtime: '2022-1-1'
+        },
+        {
+          projname: 'dffff',
+          createtime: '2022-1-1'
+        },
+        {
+          projname: 'aaaa',
+          createtime: '2022-1-1'
+        }
+      ]
     }
   },
   methods: {
-    toManageTeam(){
+    handleSelect(key) {
+      /*注意：此函数点击任意一个导航栏图标都会触发，因此，不要使得key超出范围导致vuex改变*/
+      if (key >= 0) {/*说明选择了一个队伍，而不是跳转链接*/
+        this.$store.state.teamname = this.teamlist[key];
+        console.log(key);
+        console.log('已经选择:保存至vuex' + this.$store.state.teamname);
+        this.reload();
+      }
+      console.log('该跳转了');
+    },
+    toDocs(){
+      this.$router.push('/docs');
+    },
+    toManageTeam() {
       this.$router.push('/manageTeam');
-    },/*路由未定*/
+    },
     logout() {
       this.$confirm('您即将退出登陆, 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -97,34 +160,35 @@ export default {
         });
       });
     },
-    showproj: function () {
-      //this.$router.push('/manageProject');
-      return;
+    toProject() {
     },
-    showrubbish: function () {
+    toRubbish() {
       this.$router.push('/manageRubbish');
     },
-    showAdd:function(){
+    toAdd() {
       this.$router.push('/addProject');
+    },
+    toChoose(){
+      this.$router.push('/chooseTeam');
     },
     handleEdit(index) {
       this.$prompt('请输入项目新名称', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        inputPlaceholder:'项目新名称'
-      }).then(({ value }) => {
+        inputPlaceholder: '项目新名称'
+      }).then(({value}) => {
         this.$message({
           type: 'success',
           message: '你把项目更名为: ' + value
         });
-        let that=this;
+        let that = this;
         //console.log(that.projectidlist[index]);
         this.$axios({
           method: 'post',
           url: '/renameproject/',
           data: qs.stringify({
-            projectid:that.projectidlist[index],
-            newprojectname:value,
+            projectid: that.projectidlist[index],
+            newprojectname: value,
           })
         })
             .then(res => {
@@ -144,12 +208,12 @@ export default {
       })
     },
     handleDelete(index) {
-      let that=this;
+      let that = this;
       this.$axios({
         method: 'post',
         url: '/removeproject/',
         data: qs.stringify({
-          projectid:that.projectidlist[index]
+          projectid: that.projectidlist[index]
         })
       })
           .then(res => {
@@ -170,32 +234,32 @@ export default {
     handleLook(index) {
       //console.log('项目管理');
       //console.log(index);
-      this.$store.state.projectid= this.projectidlist[index];
+      this.$store.state.projectid = this.projectidlist[index];
       this.$router.push('/project');
     }
   },
   mounted() { //钩子
-    const id=this.$store.state.userid;
+    const id = this.$store.state.userid;
+    this.team = this.$store.state.teamname;
     //console.log(id);
-    let that=this;
+    let that = this;
     this.$axios({
       url: '/initialproject/',
       method: 'post',
       data: qs.stringify({
-        userid:id
+        userid: id
       })
     }).then(res => {
           switch (res.data.errornumber) {
             case 0:
-              that.projectlist=res.data.projectnamelist;
-              that.projectidlist=res.data.projectidlist;
-              that.teamlist=res.data.teamlist;
+              that.projectlist = res.data.projectnamelist;
+              that.projectidlist = res.data.projectidlist;
               //console.log(that.projectlist);
               //console.log(that.projectidlist);
               //console.log(that.teamlist);
               var max = that.projectlist.length;
-              for(var i=0; i<max;i++){
-                that.tableData.push({projname: that.projectlist[i] ,teamname:that.teamlist[i] });
+              for (var i = 0; i < max; i++) {
+                that.tableData.push({projname: that.projectlist[i]});
               }
               break;
             case 1:
@@ -206,8 +270,7 @@ export default {
     );
     //console.log('dead')
   },
-  computed:{
-  }
+  computed: {}
 }
 </script>
 
@@ -215,14 +278,8 @@ export default {
 #proj-show {
   margin: 0 auto;
 }
-el-form{
-  width: 500px;
-  margin: 0 auto;
-}
-el-input{
-  width: 200px;
-}
-el-header{
+
+el-header {
   line-height: 100%;
 }
 </style>

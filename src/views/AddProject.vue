@@ -5,40 +5,52 @@
         <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal"
                  background-color="#545c64"
                  text-color="#fff"
-                 active-text-color="#ffd04b">
-          <el-menu-item index="1" @click="showproj" >项目中心</el-menu-item>
-          <el-menu-item index="2" @click="showrubbish">回收站</el-menu-item>
-          <el-menu-item index="3" @click="showAdd">新建项目</el-menu-item>
-          <el-menu-item index="4" @click="toManageTeam">管理团队</el-menu-item>
-          <el-menu-item index="5" text-color="#eb5451"> <el-button type="text" @click="logout">退出登陆</el-button></el-menu-item>
+                 active-text-color="#ffd04b"
+                 @select="handleSelect">
+          <el-menu-item index="-1" @click="toChoose">返回</el-menu-item>
+          <el-menu-item index="-2" @click="toProject">项目管理</el-menu-item>
+          <el-menu-item index="-3" @click="toManageTeam">管理团队</el-menu-item>
+          <el-menu-item index="-4" @click="toDocs">文档中心</el-menu-item>
+          <el-menu-item index="-5" text-color="#eb5451">
+            <el-button type="text" @click="logout">退出登陆</el-button>
+          </el-menu-item>
         </el-menu>
       </el-header>
       <el-container>
+        <el-aside width="200px">
+          <el-menu
+              default-active="3"
+              class="el-menu-vertical-demo">
+            <el-menu-item index="1">
+              <i class="el-icon-menu"></i>
+              <span slot="title" @click="toProject">项目一览</span>
+            </el-menu-item>
+            <el-menu-item index="2">
+              <i class="el-icon-menu"></i>
+              <span slot="title" @click="toRubbish">回收项目</span>
+            </el-menu-item>
+            <el-menu-item index="3">
+              <i class="el-icon-document"></i>
+              <span slot="title" @click="toAdd">新建项目</span>
+            </el-menu-item>
+          </el-menu>
+        </el-aside>
         <el-main>
           <el-row>
             <!--放置进度条-->
             <el-col :span="12" :offset="6"><div>
               <el-steps :active="step" align-center>
                 <el-step title="输入项目名" description="起一个名字吧"></el-step>
-                <el-step title="选择项目所属团队" description="团队过多可以搜索寻找"></el-step>
                 <el-step title="输入项目简介" description="为项目将要做什么撰写描述"></el-step>
               </el-steps>
             </div></el-col>
             <!--放置输入框-->
             <el-col :span="8" :offset="8"><div >
-              <el-form :model="form" ref="form" class="form">
+              <el-form :model="form" ref="form" class="form" >
                 <el-form-item prop="text" v-show="a">
                   <el-input placeholder="项目名" type="text" v-model="form.projectname"  autocomplete="off"></el-input>
                 </el-form-item>
-                <el-select v-model="value" filterable placeholder="请选择团队 或键入以搜索" v-show="b" id="choose-team">
-                  <el-option
-                      v-for="item in options"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-                  </el-option>
-                </el-select>
-                <el-form-item prop="text" v-show="c">
+                <el-form-item prop="text" v-show="b">
                   <el-input
                       placeholder="项目描述"
                       autosize
@@ -46,6 +58,7 @@
                       type="textarea"
                       v-model="form.projectdiscrp"
                       maxlength="100"
+                      size="medium"
                       show-word-limit
                       autocomplete="off"
                       @keyup.enter.native="addproj"
@@ -60,10 +73,6 @@
               </el-button-group>
               <el-button-group v-show="b">
                 <el-button type="primary" @click="toA">上一步</el-button>
-                <el-button type="primary" @click="toC">下一步</el-button>
-              </el-button-group>
-              <el-button-group v-show="c">
-                <el-button type="primary" @click="toB">上一步</el-button>
                 <el-button type="primary" @click="addproj">完成</el-button>
               </el-button-group>
             </div></el-col>
@@ -80,15 +89,15 @@ export default {
   name: "AddProject",
   data() {
     return {
+      team:'',
       /*v-show使用*/
       a:true,
       b:false,
-      c:false,
       /*进度条*/
       step:1,
       teamlist:[],
       /*标题选择用变量*/
-      activeIndex: '3',
+      activeIndex: '-2',
       /*新建项目时 将会提交的数据*/
       form:{
         projectname:'',
@@ -110,14 +119,16 @@ export default {
       this.a=this.c=false;
       this.b=true;
     },
-    toC(){
-      this.step=3;
-      this.b=this.a=false;
-      this.c=true;
+    handleSelect(key) {
+      /*注意：此函数点击任意一个导航栏图标都会触发，因此，不要使得key超出范围导致vuex改变*/
+      if (key>=0){/*说明选择了一个队伍，而不是跳转链接*/
+        this.$store.state.teamname=this.teamlist[key];
+        console.log(key);
+        console.log('已经选择:保存至vuex'+this.$store.state.teamname);
+        this.reload();
+      }
+      console.log('该跳转了');
     },
-    toManageTeam(){
-      this.$router.push('/manageTeam');
-    },/*路由未定*/
     logout() {
       this.$confirm('您即将退出登陆, 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -139,16 +150,24 @@ export default {
         });
       });
     },
-    showproj: function () {
+    toProject () {
       this.$router.push('/manageProject');
     },
-    showrubbish: function () {
+    toRubbish() {
       this.$router.push('/manageRubbish');
     },
-    showAdd:function(){
-      //this.$router.push('/addProject');
+    toAdd(){
     },
-    addproj:function () {
+    toManageTeam(){
+      this.$router.push('/manageTeam');
+    },
+    toChoose(){
+      this.$router.push('/chooseTeam');
+    },
+    toDocs(){
+      this.$router.push('/docs');
+    },
+    addproj () {
       this.$axios({
         method: 'post',
         url: '/insertproject/',
@@ -176,6 +195,8 @@ export default {
     }
   },mounted() { //钩子
     const id=this.$store.state.userid;
+    this.team=this.$store.state.teamname;
+    console.log('新建项目：初始化'+this.$store.state.teamname);
     let that=this;
     //console.log('abc');
     this.$axios({
