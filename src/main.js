@@ -11,7 +11,7 @@ Vue.use(ElementUI);
 Vue.use(leMarkdownEditor)
 Vue.config.productionTip = false
 Vue.prototype.$axios = axios
-axios.defaults.baseURL = 'http://101.43.151.164:8000';
+axios.defaults.baseURL = 'http://localhost:8000';
 
 new Vue({
   router,

@@ -19,23 +19,33 @@
                 <el-form-item label="描述">
                   <el-input v-model="form.description" autocomplete="off"></el-input>
                 </el-form-item>
+                <el-form-item label="选择文档格式">
+                  <el-select v-model="form.texttype" placeholder="文档格式">
+                    <el-option label="MarkDown" value="m"></el-option>
+                    <el-option label="Word" value="d"></el-option>
+                  </el-select>
+                </el-form-item>
               </el-form>
               <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogFormVisible = false ;newDoc" >确 定</el-button>
+                <el-button type="primary" @click="dialogFormVisible = false ;newDoc()" >确 定</el-button>
               </div>
             </el-dialog>
             <el-card class="box-card" v-for="(item,index) in doclist" :key="item">
               <div slot="header" class="clearfix">
                 <span>{{ item }}</span>
-                <el-button style="float: right; padding: 3px 0" type="text">编辑</el-button>
+                <el-button style="float: right; padding: 3px 0" type="text" @click="Edit(index)">编辑</el-button>
               </div>
               <div class="text item">
-                项目描述:{{docdislist[index]}}
+                文档描述:{{docdislist[index]}}
+              </div>
+              <div class="text item">
+                文档类型:{{docdislist[index]}}
               </div>
               <div class="text item">
                 创建者:{{docdislist[index]}}
               </div>
+
             </el-card>
           </el-col>
         </el-row>
@@ -48,35 +58,42 @@
 import ProjectMenu from "@/components/ProjectMenu";
 import qs from "qs";
 export default {
+  inject: ['reload'],
   name: "DocsList",
   components: {ProjectMenu},
   data(){
     return{
-      doclist:['1dddd','ddddddd'],
-      docdislist:['ffff','fffffffffffffffffffffffff'],
+      doclist:[],
+      docdislist:[],
       docidlist:[2,3],
       dialogFormVisible: false,
       form: {
         name: '',
-        description: ''
+        description: '',
+        texttype:''
       }
     }
   },
   methods:{
+    Edit(index){
+      this.$store.state.docid=this.docidlist[index];
+    },
     newDoc(){
+      console.log("进入新建函数体")
       let that=this;
       this.$axios({
-        url: '//',
+        url: '/inserttext/',
         method: 'post',
         data: qs.stringify({
           projectid:that.$store.state.projectid,
           docname:that.form.name,
-          description:that.form.description
+          description:that.form.description,
+          texttype:'m' /*!                                                     改      */
         })
       }).then(res => {
         switch (res.data.errornumber) {
           case 0:
-            this.$message.error("请求方式错误");
+            this.$message.success("新建成功");
             this.reload();
             break;
           case 1:
@@ -90,7 +107,7 @@ export default {
     let id = this.$store.state.projectid;
     let that=this;
     this.$axios({
-      url: '/initialprojectinformation/',
+      url: '/getdoclist/',
       method: 'post',
       data: qs.stringify({
         projectid: id
@@ -98,6 +115,8 @@ export default {
     }).then(res => {
       switch (res.data.errornumber) {
         case 0:
+          console.log('进入case');
+          console.log(res.data.doclist);
           that.doclist=res.data.doclist;
           that.docdislist=res.data.docdislist;
           that.docidlist=res.data.docidlist;

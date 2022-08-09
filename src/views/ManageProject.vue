@@ -99,22 +99,9 @@ export default {
     return {
       search: '',
       activeIndex: '-2',
-      projectidlist: ['1', '2', '3'],
+      projectidlist: [],
       /*整顿好的项目列表，待展示*/
-      tableData: [
-        {
-          projname: 'ffff',
-          createtime: '2022-1-1'
-        },
-        {
-          projname: 'dffff',
-          createtime: '2022-1-1'
-        },
-        {
-          projname: 'aaaa',
-          createtime: '2022-1-1'
-        }
-      ]
+      tableData: []
     }
   },
   methods: {
@@ -167,7 +154,7 @@ export default {
           message: '你把项目更名为: ' + value
         });
         let that = this;
-        //console.log(that.projectidlist[index]);
+        console.log('正在修改'+that.projectidlist[index]);
         this.$axios({
           method: 'post',
           url: '/renameproject/',
@@ -256,11 +243,17 @@ export default {
     }).then(res => {
           switch (res.data.errornumber) {
             case 0:
+              //console.log('fafadfadfafaf');
               that.projectidlist = res.data.projectidlist;
-              var max = that.projectlist.length;
+              console.log(res.data.projectidlist);
+              console.log(res.data.projectlist);
+              console.log(res.data.createtimelist);
+              var max = that.projectidlist.length;
+              //console.log(max);
               for (var i = 0; i < max; i++) {
                 that.tableData.push({projname: res.data.projectlist[i] ,createtime:res.data.createtimelist[i]});
               }
+              //console.log(that.projectidlist);
               break;
             case 1:
               this.$message.error("请求方式错误");

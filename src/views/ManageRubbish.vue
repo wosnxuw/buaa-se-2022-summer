@@ -91,20 +91,7 @@ export default {
       activeIndex: '-2',
       projectidlist: [],
       /*整顿好的项目列表，待展示*/
-      tableData: [
-        {
-          projname: 'ffff',
-          createtime: '2022-1-1'
-        },
-        {
-          projname: 'dffff',
-          createtime: '2022-1-1'
-        },
-        {
-          projname: 'aaaa',
-          createtime: '2022-1-1'
-        }
-      ]
+      tableData: []
     }
   },
   methods: {
@@ -216,7 +203,7 @@ export default {
           switch (res.data.errornumber) {
             case 0:
               that.projectidlist = res.data.projectidlist;
-              var max = that.projectlist.length;
+              var max = that.projectidlist.length;
               for (var i = 0; i < max; i++) {
                 that.tableData.push({projname: res.data.projectlist[i] ,createtime:res.data.createtimelist[i]});
               }

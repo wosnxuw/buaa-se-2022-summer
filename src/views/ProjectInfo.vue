@@ -54,8 +54,8 @@ export default {
     }).then(res => {
       switch (res.data.errornumber) {
         case 0:
-          that.projname=res.data.projectname;
-          that.projectdiscrp=res.data.projectdescpt;
+          that.projname='项目名:'+res.data.projectname;
+          that.projectdiscrp='项目简介:'+res.data.projectdiscpt;
           break;
         case 1:
           this.$message.error("请求方式错误");

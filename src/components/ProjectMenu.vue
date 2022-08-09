@@ -17,6 +17,11 @@
 <script>
 export default {
   name: "ProjectMenu",
+  data(){
+    return{
+      activeIndex:''
+    }
+  },
   methods:{
     toProject() {
       this.$router.push('/manageProject');
