@@ -9,7 +9,10 @@ export default new Vuex.Store({
     projectid:-1,
     userid:-1,
     teamname:'选择队伍',
-    teamid:-1
+    teamid:-1,
+    docid:-1,
+    mdid:-1,
+    drawid:-1
   },
   getters: {
   },

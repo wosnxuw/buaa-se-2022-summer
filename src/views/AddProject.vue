@@ -164,7 +164,8 @@ export default {
         data: qs.stringify({
           projectname:this.form.projectname,
           projectdiscrp:this.form.projectdiscrp,
-          teamid:that.$store.state.teamid
+          teamid:that.$store.state.teamid,
+          id:that.$store.state.userid
         })
       })
           .then(res => {

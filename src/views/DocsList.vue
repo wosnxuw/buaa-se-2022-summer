@@ -8,7 +8,9 @@
       <el-main>
         <el-row :gutter="40">
           <el-col :span="12" :offset="6">
-            <el-button type="text" @click="dialogFormVisible = true">新建项目</el-button>
+            <el-card class="box-card">
+              <el-button type="text" @click="dialogFormVisible = true">新建文档</el-button>
+            </el-card>
             <el-dialog title="填写" :visible.sync="dialogFormVisible">
               <el-form :model="form">
                 <el-form-item label="名称">
@@ -20,7 +22,7 @@
               </el-form>
               <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+                <el-button type="primary" @click="dialogFormVisible = false ;newDoc" >确 定</el-button>
               </div>
             </el-dialog>
             <el-card class="box-card" v-for="(item,index) in doclist" :key="item">
@@ -52,12 +54,37 @@ export default {
     return{
       doclist:['1dddd','ddddddd'],
       docdislist:['ffff','fffffffffffffffffffffffff'],
+      docidlist:[2,3],
       dialogFormVisible: false,
       form: {
         name: '',
         description: ''
       }
     }
+  },
+  methods:{
+    newDoc(){
+      let that=this;
+      this.$axios({
+        url: '//',
+        method: 'post',
+        data: qs.stringify({
+          projectid:that.$store.state.projectid,
+          docname:that.form.name,
+          description:that.form.description
+        })
+      }).then(res => {
+        switch (res.data.errornumber) {
+          case 0:
+            this.$message.error("请求方式错误");
+            this.reload();
+            break;
+          case 1:
+            this.$message.error("请求方式错误");
+            break;
+        }
+      })
+    },
   },
   mounted() {
     let id = this.$store.state.projectid;
@@ -71,8 +98,9 @@ export default {
     }).then(res => {
       switch (res.data.errornumber) {
         case 0:
-          that.projname=res.data.projectname;
-          that.projectdiscrp=res.data.projectdescpt;
+          that.doclist=res.data.doclist;
+          that.docdislist=res.data.docdislist;
+          that.docidlist=res.data.docidlist;
           break;
         case 1:
           this.$message.error("请求方式错误");
