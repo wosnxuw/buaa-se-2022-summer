@@ -2,6 +2,10 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 
+import Designer from '@/views/designer/index'
+import Preview from '@/views/preview/index'
+import DocumentEdit from '../views/DocumentEdit'
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -53,12 +57,14 @@ const routes = [
   {
     path: '/documentEdit',
     name: 'documentEdit',
-    component: () => import('../views/DocumentEdit'),
+    // component: () => import('../views/DocumentEdit'),
+    component: DocumentEdit
   },
   {
     path: '/design',
     name: 'design',
-    component: () => import('../views/DesignProject'),
+    // component: () => import('../views/DesignProject'),
+    component: Designer
   },
   {
     path: '/chooseTeam',
@@ -79,7 +85,15 @@ const routes = [
     path: '/draw',
     name: 'draw',
     component: () => import('../views/DrawList'),
-  }
+  },{
+    path: '/view',
+    name: 'view',
+    component: Preview
+  },{
+    path: '/preview',
+    name: 'preview',
+    component: Preview
+}
 ]
 
 const router = new VueRouter({
