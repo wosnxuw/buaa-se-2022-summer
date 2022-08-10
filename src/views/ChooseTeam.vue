@@ -66,23 +66,14 @@
 import qs from "qs";
 
 export default {
+  inject: ['reload'],
   name: "ChooseTeam",
   data() {
     return {
-      tableData: [
-        {
-          teamname: '团队1',
-          createuser: '张三',
-          createtime: '2022-5-9'
-        }, {
-          teamname: '团队2',
-          createuser: '李四',
-          createtime: '2022-5-1'
-        }
-      ],
+      tableData: [],
       search: '',
       activeIndex:'-1',
-      teamidlist: [4,6]
+      teamidlist: []
     }
   },
   methods: {
@@ -105,7 +96,6 @@ export default {
               switch (res.data.result) {
                 case 0:
                   this.$message.success("新建团队成功，团队名为:" + value);
-                  //this.$router.push('/manageTeam');
                   this.reload();
                   break;
                 case 1:
@@ -130,8 +120,10 @@ export default {
       });
     },
     toProject(index) {
+      console.log('fgggg');
+      console.log(this.teamidlist);
       this.$store.state.teamid = this.teamidlist[index];
-      console.log("即将离开选择队伍界面，选择了："+this.$store.state.teamid)
+      console.log("即将离开选择队伍界面，选择了："+this.$store.state.teamid);
       this.$router.push('/manageProject');
     },
     logout() {
@@ -160,19 +152,20 @@ export default {
     /*初始化本界面，不需要保存当前已选择的队伍id*/
     let that = this;
     this.$axios({
-      url: '//',
+      url: '/getteamcreate/',
       method: 'post',
       data: qs.stringify({
         id: that.$store.state.userid
       })
     }).then(res => {
-          switch (res.data.result) {
+          switch (res.data.errornumber) {
             case 0:
+              console.log('已获取结果');
               that.teamidlist = res.data.teamidlist;
               var i = 0;
               for (i = 0; i < res.data.teamlist.length; i++) {
                 that.tableData.push({
-                  team: res.data.teamlist[i],
+                  teamname: res.data.teamlist[i],
                   createuser: res.data.createuserlist[i],
                   createtime: res.data.createtimelist[i]
                 });

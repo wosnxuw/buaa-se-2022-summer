@@ -1,69 +1,60 @@
 <template>
-  <el-table
-      :data="tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
-      style="width: 100%">
-    <el-table-column
-        label="Date"
-        prop="date">
-    </el-table-column>
-    <el-table-column
-        label="Name"
-        prop="name">
-    </el-table-column>
-    <el-table-column
-        align="right">
-      <!--eslint-disable-next-line-->
-      <template slot="header" slot-scope="scope">
-        <el-input
-            v-model="search"
-            size="mini"
-            placeholder="输入关键字搜索"/>
-      </template>
-      <template slot-scope="scope">
-        <el-button
-            size="mini"
-            @click="handleEdit(scope.$index, scope.row)">Edit</el-button>
-        <el-button
-            size="mini"
-            type="danger"
-            @click="handleDelete(scope.$index, scope.row)">Delete</el-button>
-      </template>
-    </el-table-column>
-  </el-table>
+  <div id="app">
+    <div id="editor-main">
+      <le-editor v-model="value" :hljs-css="hljsCss" :image-uploader="imageUploader" @save="save"></le-editor>
+    </div>
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'AboutView',
+  // ...
   data() {
     return {
-      tableData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }],
-      search: ''
+      hljsCss: 'agate',
+      value: '这里放markdown内容',
+      // 自定义
+      imageUploader: {
+        custom: false,
+        fileType: 'file',
+        fileNameType: '',
+        imagePrefix: 'http://106.54.92.121', // 图片上传成功后，预览地址前缀
+        type: 'server',
+        url: 'http://106.54.92.121:82/upload' // 上传接口地址
+      }
     }
   },
   methods: {
-    handleEdit(index, row) {
-      console.log(index, row);
-    },
-    handleDelete(index, row) {
-      console.log(index, row);
+    // 自定义图片上传
+    // uploadImg: function ($vm, file, fileName) {
+    //   console.log($vm)
+    //   console.log(file)
+    //   console.log(fileName)
+    //   // 添加图片
+    //   // 两个参数 第一个是图片访问路径 第二个是文件名
+    //   $vm.insertImg(`${$vm.config.imageUploader.imagePrefix}${fileName}`, fileName)
+    // },
+    save: function (val) {
+      // 获取预览文本
+      console.log(this.value) // 这里是原markdown文本
+      console.log(val) // 这个是解析出的html
     }
   },
+  mounted() {
+  }
 }
 </script>
+
+<style scoped>
+#app {
+  width: 1200px;
+  height: 500px;
+  margin: 50px auto;
+}
+
+#editor-main {
+  color: #2c3e50;
+  width: 100%;
+  height: 100%;
+}
+</style>

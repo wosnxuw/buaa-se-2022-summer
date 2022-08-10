@@ -5,8 +5,7 @@
         <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal"
                  background-color="#545c64"
                  text-color="#fff"
-                 active-text-color="#ffd04b"
-                 @select="handleSelect">
+                 active-text-color="#ffd04b">
           <el-menu-item index="-1" @click="toChoose">返回</el-menu-item>
           <el-menu-item index="-2" @click="toProject">项目管理</el-menu-item>
           <el-menu-item index="-3" @click="toManageTeam">管理团队</el-menu-item>
@@ -73,7 +72,7 @@
                     size="mini"
                     icon="el-icon-document-copy"
                     type="warning" plain
-                    @click="handleEdit(scope.$index)">复制
+                    @click="handleCopy(scope.$index)">复制
                 </el-button>
                 <el-button
                     size="mini"
@@ -98,47 +97,14 @@ export default {
   name: "ManageProject",
   data() {
     return {
-      team: '',
-      /*标题选择用变量*/
       search: '',
       activeIndex: '-2',
-      /*三个列表*/
-      projectlist: ['cccccc', 'ddddddd', 'fffffffffff'],
-      projectidlist: ['1', '2', '3'],
+      projectidlist: [],
       /*整顿好的项目列表，待展示*/
-      tableData: [
-        {
-          projname: 'ffff',
-          createtime: '2022-1-1'
-        },
-        {
-          projname: 'dffff',
-          createtime: '2022-1-1'
-        },
-        {
-          projname: 'aaaa',
-          createtime: '2022-1-1'
-        }
-      ]
+      tableData: []
     }
   },
   methods: {
-    handleSelect(key) {
-      /*注意：此函数点击任意一个导航栏图标都会触发，因此，不要使得key超出范围导致vuex改变*/
-      if (key >= 0) {/*说明选择了一个队伍，而不是跳转链接*/
-        this.$store.state.teamname = this.teamlist[key];
-        console.log(key);
-        console.log('已经选择:保存至vuex' + this.$store.state.teamname);
-        this.reload();
-      }
-      console.log('该跳转了');
-    },
-    toDocs(){
-      this.$router.push('/docs');
-    },
-    toManageTeam() {
-      this.$router.push('/manageTeam');
-    },
     logout() {
       this.$confirm('您即将退出登陆, 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -159,6 +125,12 @@ export default {
           message: '已放弃'
         });
       });
+    },
+    toDocs(){
+      this.$router.push('/docs');
+    },
+    toManageTeam() {
+      this.$router.push('/manageTeam');
     },
     toProject() {
     },
@@ -182,7 +154,7 @@ export default {
           message: '你把项目更名为: ' + value
         });
         let that = this;
-        //console.log(that.projectidlist[index]);
+        console.log('正在修改'+that.projectidlist[index]);
         this.$axios({
           method: 'post',
           url: '/renameproject/',
@@ -232,35 +204,56 @@ export default {
           })
     },
     handleLook(index) {
-      //console.log('项目管理');
-      //console.log(index);
       this.$store.state.projectid = this.projectidlist[index];
       this.$router.push('/project');
-    }
+    },
+    handleCopy(index) {
+      let that = this;
+      this.$axios({
+        method: 'post',
+        url: '//',
+        data: qs.stringify({
+          projectid: that.projectidlist[index]
+        })
+      })
+          .then(res => {
+            switch (res.data.errornumber) {
+              case 0:
+                this.$message.success("移动到回收站成功！");
+                this.reload();
+                break;
+              case 1:
+                this.$message.error("请求方式错误");
+                break;
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          })
+    },
   },
   mounted() { //钩子
-    const id = this.$store.state.userid;
-    this.team = this.$store.state.teamname;
-    //console.log(id);
     let that = this;
     this.$axios({
       url: '/initialproject/',
       method: 'post',
       data: qs.stringify({
-        userid: id
+        teamid: that.$store.state.teamid
       })
     }).then(res => {
           switch (res.data.errornumber) {
             case 0:
-              that.projectlist = res.data.projectnamelist;
+              //console.log('fafadfadfafaf');
               that.projectidlist = res.data.projectidlist;
-              //console.log(that.projectlist);
-              //console.log(that.projectidlist);
-              //console.log(that.teamlist);
-              var max = that.projectlist.length;
+              console.log(res.data.projectidlist);
+              console.log(res.data.projectlist);
+              console.log(res.data.createtimelist);
+              var max = that.projectidlist.length;
+              //console.log(max);
               for (var i = 0; i < max; i++) {
-                that.tableData.push({projname: that.projectlist[i]});
+                that.tableData.push({projname: res.data.projectlist[i] ,createtime:res.data.createtimelist[i]});
               }
+              //console.log(that.projectidlist);
               break;
             case 1:
               this.$message.error("请求方式错误");
@@ -268,7 +261,6 @@ export default {
           }
         }
     );
-    //console.log('dead')
   },
   computed: {}
 }

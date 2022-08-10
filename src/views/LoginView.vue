@@ -67,7 +67,7 @@ export default {
                 });
                 this.$store.state.userid=res.data.userid;
                 setTimeout(() => {
-                  this.$router.push('/manageProject');
+                  this.$router.push('/chooseTeam');
                 }, 1000);
                 break;}
               case 1:
