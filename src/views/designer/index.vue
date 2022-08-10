@@ -9,6 +9,7 @@
         <span style="font-size:30px">墨 书</span>       
       </el-col>
       <el-col :span="16" @click.self.native="outBlur">
+        <el-button size="mini" @click="back" style="margin: 10px 5px;background: #d5d9e2;float: right">返回</el-button>
         <el-button size="mini" @click="preview" style="margin: 10px 10px;
             background: #49586e;color: #fff;float: right">预览</el-button>
         <el-button size="mini" @click="submitDesign" style="margin: 10px 5px;background: #d5d9e2;float: right">保存</el-button>
@@ -109,13 +110,14 @@
 </template>
 
 <script>
+import qs from "qs"
 import ComponentBar from "@/views/designer/componentBar";
 import ConfigBar from "@/views/designer/configBar";
 import cptOptions from "@/components/options"
 import html2canvas from 'html2canvas';
 import {fileDownload, base64toFile} from '@/utils/FileUtil'
 import env from "/env";
-import {saveOrUpdateApi,uploadFileApi, getByIdApi} from "@/api/DesignerApi";
+import {saveOrUpdateApi,uploadFileApi} from "@/api/DesignerApi";
 import {clearCptInterval} from "@/utils/refreshCptData";
 import ScaleMarkX from "@/views/designer/scaleMark/ScaleMarkX";
 import ScaleMarkY from "@/views/designer/scaleMark/ScaleMarkY";
@@ -174,6 +176,9 @@ export default {
     };
   },
   methods: {
+    back(){
+      this.$router.push('/draw');
+    },
     initContainerSize(){
       this.windowWidth = document.documentElement.clientWidth
       this.windowHeight = document.documentElement.clientHeight
@@ -195,7 +200,7 @@ export default {
       }
     },
     useMoudle(command){ 
-      console.log(command);
+      //console.log(command);
 //#region 
       var m1 = '{"id":"","title":"学术展示","scaleX":1920,"scaleY":1080,"version":"1.8.9","bgColor":"#2B3340","simpleDesc":"这是一个“学术展示”模板。","bgImg":"","viewCode":"","components":[{"groupTag":"basic","cptTitle":"文字框","icon":"text","cptName":"cpt-text","cptZ":100,"option":{"cptDataForm":{"dataText":"{\\"value\\":\\"普通文本\\"}","dataSource":1,"pollTime":0,"apiUrl":"/design/test","sql":"select username from sys_user limit 1"},"attribute":{"url":"","textColor":"rgba(0, 0, 0, 1)","textSize":50,"fontWeight":"normal","textLineHeight":30,"textFamily":"微软雅黑","textAlign":"center","fontStyle":"normal","textDecoration":"none","bgColor":"rgba(255, 255, 255, 0)"}},"cptX":652,"cptY":80,"cptWidth":346,"cptHeight":76,"keyId":"c8689fb0-1791-11ed-b8f2-1b9c8e9ccce6"},{"groupTag":"basic","cptTitle":"文字框","icon":"text","cptName":"cpt-text","cptZ":100,"option":{"cptDataForm":{"dataText":"{\\"value\\":\\"在此编辑在此编辑文本\\"}","dataSource":1,"pollTime":0,"apiUrl":"/design/test","sql":"select username from sys_user limit 1"},"attribute":{"url":"","textColor":"rgba(215, 224, 214, 1)","textSize":30,"fontWeight":"normal","textLineHeight":30,"textFamily":"微软雅黑","textAlign":"center","fontStyle":"normal","textDecoration":"none","bgColor":"rgba(255, 255, 255, 0)"}},"cptX":176,"cptY":268,"cptWidth":272,"cptHeight":451,"keyId":"ffbda9b0-1791-11ed-9f2e-2b74cecd932a"},{"groupTag":"chart","cptTitle":"柱状图","icon":"column","cptName":"cpt-chart-column","cptZ":100,"option":{"attribute":{"chartTitle":"标题一","titleLeft":"center","titleTop":10,"titleTextColor":"#ccc","xAxisShow":true,"yAxisShow":true,"xLineShow":true,"yLineShow":true,"xLabelColor":"#ccc","xLineColor":"#ccc","yLabelColor":"#0bd124","yLineColor":"#ccc","yGridLineShow":false,"yTickShow":true,"xTickShow":true,"barBgShow":false,"barBorderRadius":5,"barLabelShow":true,"barLabelColor":"#ff0","barLabelSize":10,"gradualColor":true,"barColor":"#409eff","barColor1":"#e9a90a","barColor2":"#0bcfcf","barColor3":"#cc0ce6","barWidth":18,"barType":"bar","xFontRotate":0,"barPath":"path://M0,10 L10,10 C5.5,10 5.5,5 5,0 C4.5,5 4.5,10 0,10 z"},"cptDataForm":{"dataText":"{\\"xData\\":\\"Mon,Tue,Wed,Thu,Fri,Sat,Sun\\",\\"yData\\":\\"120,200,150,80,70,110,130\\"}","dataSource":1,"pollTime":0,"apiUrl":"/design/test","sql":"select username from sys_user limit 1"}},"cptX":1133,"cptY":657,"cptWidth":400,"cptHeight":300,"keyId":"b606dac0-1792-11ed-9f2e-2b74cecd932a"},{"groupTag":"chart","cptTitle":"折线图","icon":"line","cptName":"cpt-chart-line","cptZ":100,"option":{"cptDataForm":{"dataSource":1,"pollTime":0,"dataText":"{\\"xData\\":\\"Mon,Tue,Wed,Thu,Fri,Sat,Sun\\",\\"yData\\":\\"120,200,150,80,70,110,130\\"}","apiUrl":"/design/test","sql":"select username from sys_user limit 1"},"attribute":{"title":"一天用电量分布","subtext":"纯属虚构","titleLeft":"center","titleTop":10,"subtextColor":"#aaa","yTickShow":true,"yGridLineShow":false,"xLineShow":true,"yLineShow":true,"xTickShow":true,"xLabelShow":true,"yLabelShow":true,"lineColor":"#409eff","xLabelColor":"#eee","xLineColor":"#eee","titleTextColor":"#ccc","yLabelColor":"#eee","yLineColor":"#eee","smooth":false,"areaColor1":"rgba(80,141,255,0.39)","areaColor2":"rgba(56,155,255,0.25)","areaColor3":"rgba(38,197,254,0.00)"}},"cptX":1116,"cptY":248,"cptWidth":400,"cptHeight":300,"keyId":"bbee8af0-1792-11ed-9f2e-2b74cecd932a"}]}'
       var m2 = '{"id":"","title":"线上商城","scaleX":1920,"scaleY":1080,"version":"1.8.9","bgColor":"#2B3340","simpleDesc":"这是一个“线上商城”模板。","bgImg":"","viewCode":"","components":[{"groupTag":"basic","cptTitle":"轮播图","icon":"carousel","cptName":"cpt-carousel","cptZ":100,"option":{"attribute":{"trigger":"hover","fit":"cover","imgUrls":["blob:http://localhost:8009/fc2acc6c-0938-4083-a831-134bf29198da","blob:http://localhost:8009/7dff2e04-5809-45d4-9543-7d983eac5274"]}},"cptX":308,"cptY":44,"cptWidth":1245,"cptHeight":329,"keyId":"02a66a60-1795-11ed-9f78-59aa0bb32f96"},{"groupTag":"basic","cptTitle":"iframe","icon":"iframe","cptName":"cpt-iframe","cptZ":100,"option":{"attribute":{"url":"https://img0.baidu.com/it/u=1316107336,2058486850&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1"}},"cptX":194,"cptY":447,"cptWidth":285,"cptHeight":335,"keyId":"280b5270-1795-11ed-9f78-59aa0bb32f96"},{"groupTag":"basic","cptTitle":"iframe","icon":"iframe","cptName":"cpt-iframe","cptZ":100,"option":{"attribute":{"url":"https://img0.baidu.com/it/u=1316107336,2058486850&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1"}},"cptX":598,"cptY":445,"cptWidth":285,"cptHeight":335,"keyId":"5aafa5a0-1795-11ed-9f78-59aa0bb32f96"},{"groupTag":"basic","cptTitle":"iframe","icon":"iframe","cptName":"cpt-iframe","cptZ":100,"option":{"attribute":{"url":"https://img0.baidu.com/it/u=1316107336,2058486850&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1"}},"cptX":1017,"cptY":442,"cptWidth":285,"cptHeight":335,"keyId":"5e3faa30-1795-11ed-9f78-59aa0bb32f96"},{"groupTag":"basic","cptTitle":"iframe","icon":"iframe","cptName":"cpt-iframe","cptZ":100,"option":{"attribute":{"url":"https://img0.baidu.com/it/u=1316107336,2058486850&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1"}},"cptX":1434,"cptY":441,"cptWidth":285,"cptHeight":335,"keyId":"61541620-1795-11ed-9f78-59aa0bb32f96"},{"groupTag":"basic","cptTitle":"文字框","icon":"text","cptName":"cpt-text","cptZ":100,"option":{"cptDataForm":{"dataText":"{\\"value\\":\\"一\\"}","dataSource":1,"pollTime":0,"apiUrl":"/design/test","sql":"select username from sys_user limit 1"},"attribute":{"url":"","textColor":"#4BB344","textSize":16,"fontWeight":"normal","textLineHeight":30,"textFamily":"微软雅黑","textAlign":"center","fontStyle":"normal","textDecoration":"none","bgColor":"rgba(255, 255, 255, 0)"}},"cptX":201,"cptY":811,"cptWidth":269,"cptHeight":123,"keyId":"b7150f10-1795-11ed-9f78-59aa0bb32f96"},{"groupTag":"basic","cptTitle":"文字框","icon":"text","cptName":"cpt-text","cptZ":100,"option":{"cptDataForm":{"dataText":"{\\"value\\":\\"二\\"}","dataSource":1,"pollTime":0,"apiUrl":"/design/test","sql":"select username from sys_user limit 1"},"attribute":{"url":"","textColor":"#4BB344","textSize":16,"fontWeight":"normal","textLineHeight":30,"textFamily":"微软雅黑","textAlign":"center","fontStyle":"normal","textDecoration":"none","bgColor":"rgba(255, 255, 255, 0)"}},"cptX":600,"cptY":808,"cptWidth":269,"cptHeight":123,"keyId":"bc697ff0-1795-11ed-9f78-59aa0bb32f96"},{"groupTag":"basic","cptTitle":"文字框","icon":"text","cptName":"cpt-text","cptZ":100,"option":{"cptDataForm":{"dataText":"{\\"value\\":\\"三\\"}","dataSource":1,"pollTime":0,"apiUrl":"/design/test","sql":"select username from sys_user limit 1"},"attribute":{"url":"","textColor":"#4BB344","textSize":16,"fontWeight":"normal","textLineHeight":30,"textFamily":"微软雅黑","textAlign":"center","fontStyle":"normal","textDecoration":"none","bgColor":"rgba(255, 255, 255, 0)"}},"cptX":1017,"cptY":818,"cptWidth":269,"cptHeight":123,"keyId":"c1b0d170-1795-11ed-9f78-59aa0bb32f96"},{"groupTag":"basic","cptTitle":"文字框","icon":"text","cptName":"cpt-text","cptZ":100,"option":{"cptDataForm":{"dataText":"{\\"value\\":\\"四\\"}","dataSource":1,"pollTime":0,"apiUrl":"/design/test","sql":"select username from sys_user limit 1"},"attribute":{"url":"","textColor":"#4BB344","textSize":16,"fontWeight":"normal","textLineHeight":30,"textFamily":"微软雅黑","textAlign":"center","fontStyle":"normal","textDecoration":"none","bgColor":"rgba(255, 255, 255, 0)"}},"cptX":1436,"cptY":804,"cptWidth":269,"cptHeight":123,"keyId":"c70eb830-1795-11ed-9f78-59aa0bb32f96"}]}'
@@ -265,38 +270,69 @@ export default {
       if ('preview' === env.active){
 
         // 于此处获得即可
-
-        const cacheStr = localStorage.getItem('designCache');
-        if (cacheStr){
-          // var tet = '{"id":"","title":"我的大屏","scaleX":1920,"scaleY":1080,"version":"1.8.9","bgColor":"#2B3340","simpleDesc":"","bgImg":"","viewCode":"","components":[{"groupTag":"basic","cptTitle":"边框","icon":"border","cptName":"cpt-dataV-border","cptZ":100,"option":{"attribute":{"borderType":"dv-border-box-1","borderColor1":"#409eff","borderColor2":"#f00","backgroundColor":"rgba(0, 0, 0, 0)","borderTitle":"标题1","titleWidth":250,"dur":3,"reverse":false}},"cptX":329,"cptY":269,"cptWidth":400,"cptHeight":300,"keyId":"194570d0-1705-11ed-a892-43487402c016"},{"groupTag":"basic","cptTitle":"边框","icon":"border","cptName":"cpt-dataV-border","cptZ":100,"option":{"attribute":{"borderType":"dv-border-box-1","borderColor1":"#409eff","borderColor2":"#f00","backgroundColor":"rgba(0, 0, 0, 0)","borderTitle":"标题1","titleWidth":250,"dur":3,"reverse":false}},"cptX":1066,"cptY":204,"cptWidth":400,"cptHeight":300,"keyId":"1a1bd3a0-1705-11ed-a892-43487402c016"}]}'
-          this.designData = JSON.parse(cacheStr);
-          if (!this.designData.version || this.designData.version !== env.version){
-            localStorage.removeItem('designCache');
-            this.$message.success("发现旧版缓存，已清除");
-          }else{
-            this.cacheComponents = this.designData.components;
-            this.designData.components = [];//强迫症
+        let did=this.$store.state.drawid;
+        // let that=this;
+        var openthing = '';
+        this.$axios({
+          url: '/opendesignprototype/',  // 我不知道路由
+          method: 'post',
+          data: qs.stringify({
+            designprototypeid: did,
+          })
+        }).then(res => {
+          switch (res.data.errornumber) {
+            case 0:
+              openthing = res.data.designprototypecontent;
+              //console.log(openthing);
+              if(openthing===null){
+                openthing='{"id":"","title":"","scaleX":1920,"scaleY":1080,"version":"1.8.9","bgColor":"#2B3340","simpleDesc":"","bgImg":"","viewCode":"","components":[]}';
+              }
+              this.designData = JSON.parse(openthing);
+              this.cacheComponents = this.designData.components;
+              this.designData.components = [];//强迫症
+              this.designData.version = env.version;
+              this.initContainerSize();
+              break;
           }
+        })
+
+        // const cacheStr = localStorage.getItem('designCache');
+        if (openthing){
+          this.designData = JSON.parse(openthing);
+          this.cacheComponents = this.designData.components;
+          this.designData.components = [];//强迫症
+          this.designData.version = env.version;
+          this.initContainerSize();
+          // if (!this.designData.version || this.designData.version !== env.version){
+          //   localStorage.removeItem('designCache');
+          //   this.$message.success("发现旧版缓存，已清除");
+          // }else{
+          //   this.cacheComponents = this.designData.components;
+          //   this.designData.components = [];//强迫症
+          // }
+        }else{
+          //console.log('打开时无文件读取到1');
         }
-        this.designData.version = env.version;
-        this.initContainerSize();
+        // this.designData.version = env.version;
+        // this.initContainerSize();
         loading.close();
       }else{
-        const id = this.$route.query.id;
-        if (id){
-          getByIdApi(id,0).then(res => {
-            this.designData = res.data;
-            this.cacheComponents = JSON.parse(this.designData.components);
-            if (!this.cacheComponents){
-              this.cacheComponents = []
-            }
-            this.designData.components = [];
-            this.initContainerSize();
-            loading.close();
-          })
-        }else{
-          this.$message.error('当前为DEV模式，请从管理端进入')
-        }
+        //console.log('打开时无文件读取到2');
+        // const id = this.$route.query.id;
+        // if (id){
+        //   getByIdApi(id,0).then(res => {
+        //     this.designData = res.data;
+        //     this.cacheComponents = JSON.parse(this.designData.components);
+        //     if (!this.cacheComponents){
+        //       this.cacheComponents = []
+        //     }
+        //     this.designData.components = [];
+        //     this.initContainerSize();
+        //     loading.close();
+        //   })
+        // }else{
+        //   this.$message.error('当前为DEV模式，请从管理端进入')
+        // }
       }
     },
     copyCpt(item){
@@ -324,10 +360,28 @@ export default {
     submitDesign() {//保存
       if ('preview'===env.active){
         this.designData.components = this.cacheComponents;
-        console.log(JSON.stringify(this.designData));
-        localStorage.setItem('designCache', JSON.stringify(this.designData));
-        this.$message.success('已保存')
+        //console.log(JSON.stringify(this.designData));
+        // localStorage.setItem('designCache', JSON.stringify(this.designData));
 
+        let designmessage = JSON.stringify(this.designData);
+        //console.log(designmessage)
+        let did = this.$store.state.drawid;
+        //let that = this;
+        this.$axios({
+          url:'/updatedesignprototype/',  // 我不知道路由
+          method:'post',
+          data:qs.stringify({
+            designprototypeid:did,
+            designprototypecontent:designmessage
+          })
+        }).then(res=>{
+          switch (res.data.errornumber) {
+            case 0:
+              //that.msg = res.data.msg;
+              this.$message.success('已保存')
+              break;
+          }
+        })
         // 写于此处
 
       }else {

@@ -1,7 +1,7 @@
 <template>
   <div id="login" class="login">
     <div class="wrap">
-      <h1>登 录</h1>
+      <h1 id="login-title">登 录</h1>
       <el-form :model="form" ref="form" class="form">
         <el-form-item prop="email">
           <el-input placeholder="邮箱" type="text" v-model="form.email" autocomplete="off"></el-input>
@@ -17,7 +17,7 @@
           ></el-input>
         </el-form-item>
         <el-form-item class="btn_login">
-          <el-button type="primary" @click="login">登&nbsp;&nbsp;录</el-button>
+          <el-button type="primary" @click="login" >登&nbsp;&nbsp;录</el-button>
         </el-form-item>
       </el-form>
       <div class="suffix">
@@ -87,7 +87,12 @@ export default {
           })
     },
     toRegister: function () {
+      console.log('inle');
       this.$router.push('/register');
+      // let routeUrl = this.$router.resolve({
+      //   path: "/design"
+      // });
+      // window.open(routeUrl.href, '_blank');
     }
   }
 }
@@ -113,7 +118,7 @@ export default {
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)
 }
 #login .btn_login {
-  margin-top: 25px;
+  margin-top: 15px;
   text-align: center;
 }
 #login .btn_login button{
@@ -128,5 +133,8 @@ export default {
   color:#999;
   cursor: pointer;
   float:right;
+}
+#login-title{
+  margin-top: 30px;
 }
 </style>

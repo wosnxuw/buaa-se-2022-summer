@@ -1,15 +1,17 @@
 <template>
+  <!-- <div id="app" style="overflow-x: hidden">
+    <router-view v-if="isRouterAlive"/>
+  </div> -->
   <div id="app">
     <router-view v-if="isRouterAlive"/>
   </div>
 </template>
 
-
 <script>
-/*
-这个脚本主要是用来刷新页面的
-*/
-export default {
+// export default {
+//   name: 'App',
+// }
+  export default {
   name: 'App',
   provide (){
     return {
@@ -35,6 +37,7 @@ export default {
 </script>
 
 <style>
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -43,12 +46,11 @@ export default {
   color: #2c3e50;
 }
 
-/* html, body ,#app{ height: 100%;}
+html, body ,#app{ height: 100%;}
 * {margin: 0;padding: 0;}
 .formItemDiv{width: 100%;height: 30px;border-radius:4px;background-color: #fff;
   text-indent: 1em;font-size: 13px;cursor: pointer;color: #666}
 *::-webkit-scrollbar {width: 4px;height: 4px;}
 *::-webkit-scrollbar-thumb {border-radius: 4px;background: #5E708D;}
-*::-webkit-scrollbar-track {border-radius: 4px;background: #ddd;} */
-
+*::-webkit-scrollbar-track {border-radius: 4px;background: #ddd;}
 </style>

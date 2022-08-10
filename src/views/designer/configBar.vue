@@ -79,16 +79,16 @@
             <el-form-item label="背景颜色">
               <el-color-picker v-model="designData.bgColor" show-alpha/>
             </el-form-item>
-            <el-form-item label="背景图片">
-              <div v-if="designData.bgImg" style="width: 100%;height: 100%;position: relative">
-                <img :src="fileUrl+designData.bgImg" style="width: 100%;height: 100%;"/>
-                <i style="position: absolute;z-index: 6;right: 0;font-size: 20px;color: #FFCCCC"
-                   class="el-icon-delete" @click.stop="handleRemove"></i>
-              </div>
-              <div v-else class="uploadItem" @click="showGallery">
-                <i style="font-size: 40px;color: #aaa" class="el-icon-plus"></i>
-              </div>
-            </el-form-item>
+<!--            <el-form-item label="背景图片">-->
+<!--              <div v-if="designData.bgImg" style="width: 100%;height: 100%;position: relative">-->
+<!--                <img :src="fileUrl+designData.bgImg" style="width: 100%;height: 100%;"/>-->
+<!--                <i style="position: absolute;z-index: 6;right: 0;font-size: 20px;color: #FFCCCC"-->
+<!--                   class="el-icon-delete" @click.stop="handleRemove"></i>-->
+<!--              </div>-->
+<!--              <div v-else class="uploadItem" @click="showGallery">-->
+<!--                <i style="font-size: 40px;color: #aaa" class="el-icon-plus"></i>-->
+<!--              </div>-->
+<!--            </el-form-item>-->
             <!-- <el-form-item label="个性链接">
               <el-input disabled v-model="designData.id" autocomplete="off"/>
             </el-form-item>

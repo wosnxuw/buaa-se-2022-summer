@@ -7,8 +7,11 @@
 </template>
 
 <script>
+import qs from "qs";
+
 export default {
   // ...
+  name:'MarkDown',
   data() {
     return {
       hljsCss: 'agate',
@@ -34,13 +37,46 @@ export default {
     //   // 两个参数 第一个是图片访问路径 第二个是文件名
     //   $vm.insertImg(`${$vm.config.imageUploader.imagePrefix}${fileName}`, fileName)
     // },
-    save: function (val) {
-      // 获取预览文本
-      console.log(this.value) // 这里是原markdown文本
-      console.log(val) // 这个是解析出的html
+    save () {
+      let that = this;
+      this.$axios({
+        method: 'post',
+        url: '/savetext/',
+        data: qs.stringify({
+          docid: that.$store.state.docid,
+          content: that.value
+        })
+      })
+          .then(res => {
+            switch (res.data.errornumber) {
+              case 0:
+                this.$message.success("已保存");
+                break;
+            }
+          })
     }
   },
   mounted() {
+    let that = this;
+    this.$axios({
+      method: 'post',
+      url: '/gettext/',
+      data: qs.stringify({
+        docid: that.$store.state.docid
+      })
+    })
+        .then(res => {
+          switch (res.data.errornumber) {
+            case 0:
+              this.value = res.data.content;
+              break;
+            case 1:
+              break;
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        })
   }
 }
 </script>

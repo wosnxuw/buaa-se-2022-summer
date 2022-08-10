@@ -1,10 +1,8 @@
 <template>
   <el-container>
     <el-header>
-      <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal"
-               background-color="#545c64"
-               text-color="#fff"
-               active-text-color="#ffd04b">
+      <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" background-color="#545c64"
+        text-color="#fff" active-text-color="#ffd04b">
         <el-menu-item index="-1" @click="toChoose">返回</el-menu-item>
         <el-menu-item index="-2" @click="toProject">项目管理</el-menu-item>
         <el-menu-item index="-3" @click="toManageTeam">管理团队</el-menu-item>
@@ -16,23 +14,20 @@
     </el-header>
     <el-container>
       <el-aside width="200px">
-        <el-menu
-            default-active="-4"
-            class="el-menu-vertical-demo"
-            @select="handleSelect">
-          <div v-for="(item,i) in folderlist" :key="i">
-            <el-submenu :index="(i+1).toString()">
+        <el-menu default-active="-4" class="el-menu-vertical-demo" @select="handleSelect">
+          <div v-for="(item, i) in folderlist" :key="i">
+            <el-submenu :index="(i + 1).toString()">
               <template slot="title">
                 <i class="el-icon-folder-opened"></i>
                 <span class="folder">{{ item }}</span>
               </template>
-              <div v-for="(item2,i2) in filelist[i]" :key="item2">
-                <el-menu-item :index="(i+1)*10+i2"><i class="el-icon-document"></i>{{ item2 }}</el-menu-item>
+              <div v-for="(item2, i2) in filelist[i]" :key="item2" class="file1">
+                <el-menu-item :index="(i + 1) * 10 + i2"><i class="el-icon-document"></i>{{ item2 }}</el-menu-item>
               </div>
             </el-submenu>
           </div>
-          <div v-for="(item,i) in mdlist" :key="item">
-            <el-menu-item :index="(-1*i).toString()">
+          <div v-for="(item, i) in mdlist" :key="item" class="file2">
+            <el-menu-item :index="(-1 * i).toString()">
               <i class="el-icon-document"></i>
               <span slot="title">{{ item }}</span>
             </el-menu-item>
@@ -45,8 +40,8 @@
       </el-aside>
       <el-main>
         <el-empty description="在左侧选择文件以编辑" v-show="empty"></el-empty>
-        <div id="app">
-          <div id="editor-main" v-show="markdown">
+        <div id="app" v-show="markdown">
+          <div id="editor-main">
             <le-editor v-model="value" :hljs-css="hljsCss" :image-uploader="imageUploader" @save="save"></le-editor>
           </div>
         </div>
@@ -63,7 +58,7 @@ import qs from "qs";
 export default {
   inject: ['reload'],
   name: "DocsView",
-  components: {DocEdit},
+  components: { DocEdit },
   data() {
     return {
       hljsCss: 'agate',
@@ -83,9 +78,9 @@ export default {
       docidlist: [],
       mdlist: [],
       mdidlist: [],
-      word: false,
+      word: true,
       markdown: false,
-      empty: true,
+      empty: false,
       key: undefined,
     };
   },
@@ -144,33 +139,49 @@ export default {
       this.word = false;
       this.empty = true;
     },
-    save() { /*专门保存md文件的函数*/
-      // 获取预览文本
-      //console.log(this.value) // 这里是原markdown文本
-      //console.log(val) // 这个是解析出的html
-      let that = this;
-      console.log('在'+that.$store.state.mdid);
-      this.$axios({
-        method: 'post',
-        url: '/savemd/',
-        data: qs.stringify({
-          mdid: that.$store.state.mdid,
-          content: that.value
-        })
-      })
-          .then(res => {
-            switch (res.data.errornumber) {
-              case 0:
-                this.$message.success("已保存");
-                break;
-            }
+    save() {
+      if (this.key <=0){
+        let that = this;
+        console.log('在' + that.$store.state.mdid);
+        this.$axios({
+          method: 'post',
+          url: '/savemd/',
+          data: qs.stringify({
+            mdid: that.$store.state.mdid,
+            content: that.value
           })
+        })
+            .then(res => {
+              switch (res.data.errornumber) {
+                case 0:
+                  this.$message.success("已保存");
+                  break;
+              }
+            })
+      }else{
+        let that = this;
+        this.$axios({
+          method: 'post',
+          url: '/savetext/',
+          data: qs.stringify({
+            docid: that.$store.state.docid,
+            content: that.value
+          })
+        })
+            .then(res => {
+              switch (res.data.errornumber) {
+                case 0:
+                  this.$message.success("已保存");
+                  break;
+              }
+            })
+      }
     },
     addDoc() {/*只添加隶属于项目的文件*/
       this.$prompt('请输入文件名', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-      }).then(({value}) => {
+      }).then(({ value }) => {
         let that = this;
         this.$axios({
           method: 'post',
@@ -180,16 +191,16 @@ export default {
             name: value
           })
         })
-            .then(res => {
-              switch (res.data.errornumber) {
-                case 0:
-                  this.$message.success("已新建MarkDown文档:" + value);
-                  //this.$router.push('/manageTeam');
-                  this.reload();
-                  this.$message.success('dddddd');
-                  break;
-              }
-            })
+          .then(res => {
+            switch (res.data.errornumber) {
+              case 0:
+                this.$message.success("已新建MarkDown文档:" + value);
+                //this.$router.push('/manageTeam');
+                this.reload();
+                this.$message.success('dddddd');
+                break;
+            }
+          })
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -201,78 +212,80 @@ export default {
       //console.log(key);
       let docid = undefined;
       let k = parseInt(key);
+      this.key=k;
       if (k <= 0) { //说明选了md文件
         docid = this.mdidlist[-1 * k];
         this.$store.state.mdid = docid;
+        console.log('选了md文件');
         this.showMarkDown();
         this.getMd();
       } else if (k >= 10) { //选了其他文件
         let a = k % 10;
-        let b = k / 10;
+        let b = Math.floor(k / 10);
         docid = this.docidlist[b - 1][a];
         this.$store.state.docid = docid;
+        console.log('选了项目文件'+docid);
         this.getText();
       } else { //选了文件夹
         console.log('选了文件夹');
         this.showEmpty();
-        return;
       }
     },
-    getMd(){/*获取md*/
+    getMd() {/*获取md*/
       let that = this;
       this.$axios({
         method: 'post',
         url: '/getmd/',
         data: qs.stringify({
-          mdid:that.$store.state.mdid
+          mdid: that.$store.state.mdid
         })
       })
-          .then(res => {
-            switch (res.data.errornumber) {
-              case 0:
-                if(res.data.content===null){
-                  that.value='立刻写入内容！';
-                  return;
-                }
-                that.value = res.data.content;
-                console.log(res.data.content);
-                console.log('成功获取');
-                break;
-            }
-          })
+        .then(res => {
+          switch (res.data.errornumber) {
+            case 0:
+              if (res.data.content === null) {
+                that.value = '立刻写入内容！';
+                return;
+              }
+              that.value = res.data.content;
+              console.log(res.data.content);
+              console.log('成功获取');
+              break;
+          }
+        })
     },
     getText() { /*获取隶属于项目的文档的文本 */
       let that = this;
       this.$axios({
         method: 'post',
-        url: '//',
+        url: '/gettext/',
         data: qs.stringify({
-          docid:that.$store.state.docid
+          docid: that.$store.state.docid
         })
       })
-          .then(res => {
-            switch (res.data.errornumber) {
-              case 0:
-                if (res.data.texttype) {
-                  console.log('是word');
-                  this.showWord();
-                } else {
-                  console.log('是md');
-                  this.value=res.data.value;
-                  this.showMarkDown();
-                }
-                break;
-              case 1:
-                break;
-            }
-          })
-          .catch(err => {
-            console.log(err);
-          })
+        .then(res => {
+          switch (res.data.errornumber) {
+            case 0:
+              this.value = res.data.content;
+              if(this.value===null){
+                this.value='尚未写入内容';
+              }
+              if (res.data.texttype==='d') {
+                console.log('是word');
+                this.showWord();
+              } else {
+                console.log('是md');
+                this.showMarkDown();
+              }
+              break;
+            case 1:
+              break;
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        })
     },
-    savetext() {
-
-    }
   },
   mounted() {
     let that = this;
@@ -284,20 +297,21 @@ export default {
         teamid: that.$store.state.teamid
       })
     })
-        .then(res => {
-          switch (res.data.errornumber) {
-            case 0:
-              console.log('初始化');
-              console.log(res.data.folderlist);
-              console.log(res.data.filelist);
-              this.folderlist = res.data.folderlist;
-              this.filelist = res.data.filelist;
-              this.docidlist = res.data.docidlist;
-              this.mdlist = res.data.mdlist;
-              this.mdidlist = res.data.mdidlist;
-              break;
-          }
-        })
+      .then(res => {
+        switch (res.data.errornumber) {
+          case 0:
+            console.log('初始化');
+            console.log(res.data.folderlist);
+            console.log(res.data.filelist);
+            console.log(res.data.docidlist);
+            this.folderlist = res.data.folderlist;
+            this.filelist = res.data.filelist;
+            this.docidlist = res.data.docidlist;
+            this.mdlist = res.data.mdlist;
+            this.mdidlist = res.data.mdidlist;
+            break;
+        }
+      })
   }
 }
 </script>
@@ -319,7 +333,14 @@ el-tree {
   width: 100%;
   height: 100%;
 }
-.folder{
-  color: red;
+
+.folder {
+  color: #093f86;
+}
+.file1{
+  color: royalblue;
+}
+file2{
+  color: indigo;
 }
 </style>

@@ -211,7 +211,7 @@ export default {
       let that = this;
       this.$axios({
         method: 'post',
-        url: '//',
+        url: '/copyproject/',
         data: qs.stringify({
           projectid: that.projectidlist[index]
         })
@@ -219,7 +219,7 @@ export default {
           .then(res => {
             switch (res.data.errornumber) {
               case 0:
-                this.$message.success("移动到回收站成功！");
+                this.$message.success("复制项目成功！");
                 this.reload();
                 break;
               case 1:

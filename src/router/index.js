@@ -1,6 +1,55 @@
+// import Vue from 'vue'
+// import VueRouter from 'vue-router'
+// Vue.use(VueRouter)
+
+// import Designer from '@/views/designer/index'
+// import Preview from '@/views/preview/index'
+// import DocumentEdit from '../views/DocumentEdit'
+
+// // 创建 router 实例，然后传 `routes` 配置
+// export default new VueRouter({
+//     //mode: 'history',
+//     routes: [
+
+//         {
+//             path: '/login',
+//             name: 'login',
+//             component: Designer,  //用于调试
+//             // component: DocumentEdit
+//             // component: () => import('../views/LoginView')
+//             // component: () => import('../views/RegisterView')
+
+//         }, 
+//         {
+//             path:'/register',
+//             name:'register',
+//             component: () => import('../views/RegisterView')
+//         },
+//         {
+//             path: '/docEdit',
+//             name: 'docEdit',
+//             component: DocumentEdit
+//         },{
+//             path: '/design',
+//             name: 'design',
+//             component: Designer
+//         }, {
+//             path: '/preview',
+//             name: 'preview',
+//             component: Preview
+//         }, {
+//             path: '/view',
+//             name: 'view',
+//             component: Preview
+//         }
+//     ]
+// })
+
+
+
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+//import HomeView from '../views/HomeView.vue'
 
 import Designer from '@/views/designer/index'
 import Preview from '@/views/preview/index'
@@ -8,21 +57,29 @@ import DocumentEdit from '../views/DocumentEdit'
 
 Vue.use(VueRouter)
 
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location, onResolve, onReject) {
+  if (onResolve || onReject) return originalPush.call(this, location, onResolve, onReject)
+  return originalPush.call(this, location).catch(err => err)
+}
+
+
 const routes = [
   {
-    path: '/',
+    path: '/home',
     name: 'home',
-    component: HomeView,
+    component: () => import( '../views/HomeView.vue'),
   },
   {
-    path: '/about',
-    name: 'about',
-    component: () => import( '../views/AboutView.vue'),
+    path: '/markdownEdit',
+    name: 'markdownEdit',
+    component: () => import( '../views/MarkDown.vue'),
   },
   {
     path: '/login',
     name: 'login',
     component: () => import('../views/LoginView')
+    // component:Designer
   },
   {
     path: '/register',
@@ -103,6 +160,9 @@ const router = new VueRouter({
 })
 
 import user from "@/store/user";
+
+
+
 
 /*判断访问页面若需要登录且当前未登录，则拦截至登录路由*/
 router.beforeEach((to, from, next) => {

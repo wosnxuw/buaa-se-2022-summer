@@ -1,7 +1,7 @@
 <template>
   <div id="register" class="register">
     <div class="wrap">
-      <h1>注 册</h1>
+      <h1 id="register-title">注 册</h1>
       <el-form :model="form" ref="form" class="form">
         <el-form-item prop="username">
           <el-input placeholder="真实姓名" type="text" v-model="form.username" autocomplete="off"></el-input>
@@ -152,5 +152,8 @@ export default {
   color:#999;
   cursor: pointer;
   float:right;
+}
+#register-title{
+  margin-top: 30px;
 }
 </style>

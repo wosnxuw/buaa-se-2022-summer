@@ -73,24 +73,14 @@ export default {
       /*标记哪个灯应该亮*/
       activeIndex: '-3',
       /*从后端获取的数据*/
-      namelist: ['张三', '李四'],
-      nicknamelist: ['喜羊羊', '灰太狼'],
-      emaillist: ['bbb@qq.com', 'ccc@qq.com'],
+      namelist: [],
+      nicknamelist: [],
+      emaillist: [],
       managerlist: [
         true, false
       ],
-      teamlist: ['add', 'dddc'],
-      tableData: [
-        {
-          name: '张三',
-          nickname: '喜羊羊',
-          email: '123@123.com'
-        }, {
-          name: '李四',
-          nickname: '美羊羊',
-          email: '234@123.com'
-        }
-      ]
+      teamlist: [],
+      tableData: []
     };
   },
   methods: {
@@ -150,13 +140,13 @@ export default {
                   this.reload();
                   break;
                 case 2:
-                  this.$message.error("不是管理员");
-                  break;
-                case 3:
-                  this.$message.error("邀请用户不存在");
+                  this.$message.error(res.data.msg);
                   break;
                 case 4:
-                  this.$message.error("该用户已经在团队中");
+                  this.$message.error(res.data.msg);
+                  break;
+                case 5:
+                  this.$message.error(res.data.msg);
                   break;
               }
             })
@@ -207,7 +197,7 @@ export default {
         method: 'post',
         url: '/deleteuser/',
         data: qs.stringify({
-          id: id,
+          now_userid: id,
           teamid: that.$store.state.teamid,
           delete_useremail: that.emaillist[index]
         })
@@ -215,7 +205,7 @@ export default {
           .then(res => {
             switch (res.data.result) {
               case 0:
-                this.$message.success('已移除')
+                this.$message.success('已移除');
                 this.reload();
                 break;
               case 1:
@@ -232,14 +222,15 @@ export default {
   mounted() {
     let that = this;
     this.$axios({
-      url: '//',
+      url: '/getteammember/',
       method: 'post',
       data: qs.stringify({
         teamid: that.$store.state.teamid
       })
     }).then(res => {
-          switch (res.data.result) {
+          switch (res.data.errornumber) {
             case 0:
+              console.log('初始u和'+res.data.namelist);
               that.namelist = res.data.namelist;
               that.nicknamelist = res.data.nicknamelist;
               that.emaillist = res.data.emaillist;

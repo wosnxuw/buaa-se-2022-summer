@@ -22,19 +22,16 @@
               </el-form>
               <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogFormVisible = false;newDraw()">确 定</el-button>
+                <el-button type="primary" @click="dialogFormVisible = false; newDraw()">确 定</el-button>
               </div>
             </el-dialog>
-            <el-card class="box-card" v-for="(item,index) in drawlist" :key="item">
+            <el-card class="box-card" v-for="(item, index) in drawlist" :key="item">
               <div slot="header" class="clearfix">
-                <span>{{ item }}</span>
+                <span>项目名:{{ item }}</span>
                 <el-button style="float: right; padding: 3px 0" type="text" @click="Edit(index)">编辑</el-button>
               </div>
               <div class="text item">
-                项目描述:{{drawdislist[index]}}
-              </div>
-              <div class="text item">
-                创建者:{{drawdislist[index]}}
+                项目描述:{{ drawdislist[index] }}
               </div>
             </el-card>
           </el-col>
@@ -50,12 +47,12 @@ import qs from "qs";
 export default {
   inject: ['reload'],
   name: "DrawList",
-  components: {ProjectMenu},
-  data(){
-    return{
-      drawlist:[],
-      drawdislist:[],
-      drawidlist:[],
+  components: { ProjectMenu },
+  data() {
+    return {
+      drawlist: [],
+      drawdislist: [],
+      drawidlist: [],
       dialogFormVisible: false,
       form: {
         name: '',
@@ -63,19 +60,20 @@ export default {
       }
     }
   },
-  methods:{
-    Edit(index){
-      this.$store.state.drawid=this.drawidlist[index];
+  methods: {
+    Edit(index) {
+      this.$store.state.drawid = this.drawidlist[index];
+      this.$router.push('/design');
     },
-    newDraw(){
-      let that=this;
+    newDraw() {
+      let that = this;
       this.$axios({
         url: '/insertdesignprototype/',
         method: 'post',
         data: qs.stringify({
-          projectid:that.$store.state.projectid,
-          designprototypename:that.form.name,
-          description:that.form.description
+          projectid: that.$store.state.projectid,
+          designprototypename: that.form.name,
+          description: that.form.description
         })
       }).then(res => {
         switch (res.data.errornumber) {
@@ -92,7 +90,7 @@ export default {
   },
   mounted() {
     let id = this.$store.state.projectid;
-    let that=this;
+    let that = this;
     this.$axios({
       url: '/initialdesignprototype/',
       method: 'post',
@@ -103,9 +101,9 @@ export default {
       switch (res.data.errornumber) {
         case 0:
           console.log(res.data.designprototypelist)
-          that.drawlist=res.data.designprototypelist;
-          that.drawdislist=res.data.designprototypedislist;
-          that.drawidlist=res.data.designprototypeidlist;
+          that.drawlist = res.data.designprototypelist;
+          that.drawdislist = res.data.designprototypedislist;
+          that.drawidlist = res.data.designprototypeidlist;
           break;
         case 1:
           this.$message.error("请求方式错误");
@@ -117,7 +115,7 @@ export default {
 </script>
 
 <style scoped>
-.box-card{
+.box-card {
   margin-bottom: 20px;
 }
 </style>
