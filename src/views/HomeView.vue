@@ -3,7 +3,7 @@
 
     <!--上方logo-->
     <div>
-      <el-image class="logo" style="width: 700px; height: 700px" :src="require('@/assets/newlogo.png')" fit="fill"></el-image>
+      <el-image class="logo" style="width: 500px; height: 500px" :src="require('@/assets/newlogo.png')" fit="fill"></el-image>
     </div>
 
     <!--开始使用-->
@@ -34,12 +34,13 @@ export default {
   display: inline-block;
   border-radius: 20px;
 }
-  .start-button{
-    text-align: center;
-    line-height: 50px;
-    font-family: 'Noto Serif SC', serif;
-    width: 100%;
-    height: 80px;
-  }
+.start-button{
+  text-align: center;
+  line-height: 50px;
+  font-family: 'Noto Serif SC', serif;
+  width: 100%;
+  height: 80px;
+  font-size: larger;
+}
 
 </style>
