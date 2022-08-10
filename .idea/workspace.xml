@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="a2c25766-3521-419a-b32d-27ccb2223c55" name="变更" comment="对接一半">
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/index.js" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+        <option value="Vue Single File Component" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2CnvNTzom85ysQxNgzZ105WGvxm" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.standard": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.standard": "",
+    "nodejs_package_manager_path": "npm",
+    "ts.external.directory.path": "D:\\IDE\\WebStorm\\WebStorm 2022.1.4\\plugins\\JavaScriptLanguage\\jsLanguageServicesImpl\\external",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager" selected="npm.serve">
+    <configuration name="build" type="js.build_tools.npm" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="build" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="serve" type="js.build_tools.npm" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="serve" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="npm.serve" />
+      <item itemvalue="npm.build" />
+    </list>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="默认任务">
+      <changelist id="a2c25766-3521-419a-b32d-27ccb2223c55" name="变更" comment="" />
+      <created>1659451126557</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1659451126557</updated>
+      <workItem from="1659451128268" duration="78000" />
+      <workItem from="1659451499320" duration="81000" />
+      <workItem from="1659451652593" duration="389000" />
+      <workItem from="1659452076890" duration="1091000" />
+      <workItem from="1659454175203" duration="13000" />
+      <workItem from="1659489749191" duration="88754000" />
+      <workItem from="1659659258567" duration="12355000" />
+      <workItem from="1659677807163" duration="871000" />
+      <workItem from="1659849471248" duration="63325000" />
+      <workItem from="1660032467948" duration="18405000" />
+      <workItem from="1660057531120" duration="104000" />
+      <workItem from="1660058300397" duration="482000" />
+    </task>
+    <task id="LOCAL-00001" summary="good?">
+      <created>1659452786977</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1659452786977</updated>
+    </task>
+    <task id="LOCAL-00002" summary="login&amp;register">
+      <created>1659503018524</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1659503018524</updated>
+    </task>
+    <task id="LOCAL-00003" summary="manage-project-1">
+      <created>1659512523659</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1659512523659</updated>
+    </task>
+    <task id="LOCAL-00004" summary="manage-project-2">
+      <created>1659523474967</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1659523474967</updated>
+    </task>
+    <task id="LOCAL-00005" summary="make 3pages">
+      <created>1659537516662</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1659537516662</updated>
+    </task>
+    <task id="LOCAL-00006" summary="add manageteam">
+      <created>1659584904695</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1659584904695</updated>
+    </task>
+    <task id="LOCAL-00007" summary="add project-info">
+      <created>1659599898181</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1659599898181</updated>
+    </task>
+    <task id="LOCAL-00008" summary="对接 初步">
+      <created>1659622721128</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1659622721128</updated>
+    </task>
+    <task id="LOCAL-00009" summary="对接 基本完成">
+      <created>1659632141663</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1659632141663</updated>
+    </task>
+    <task id="LOCAL-00010" summary="基本完成">
+      <created>1659666483940</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1659666483940</updated>
+    </task>
+    <task id="LOCAL-00011" summary="删除 style.css">
+      <created>1659666516036</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1659666516036</updated>
+    </task>
+    <task id="LOCAL-00012" summary="小修改">
+      <created>1659671774865</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1659671774865</updated>
+    </task>
+    <task id="LOCAL-00013" summary="操作逻辑修改">
+      <created>1659932129748</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1659932129748</updated>
+    </task>
+    <task id="LOCAL-00014" summary="改接口">
+      <created>1659959607360</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1659959607360</updated>
+    </task>
+    <task id="LOCAL-00015" summary="改文档中心">
+      <created>1660028110521</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1660028110521</updated>
+    </task>
+    <task id="LOCAL-00016" summary="对接一半">
+      <created>1660050162163</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1660050162163</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="good?" />
+    <MESSAGE value="login&amp;register" />
+    <MESSAGE value="manage-project-1" />
+    <MESSAGE value="manage-project-2" />
+    <MESSAGE value="make 3pages" />
+    <MESSAGE value="add manageteam" />
+    <MESSAGE value="add project-info" />
+    <MESSAGE value="对接 初步" />
+    <MESSAGE value="对接 基本完成" />
+    <MESSAGE value="基本完成" />
+    <MESSAGE value="删除 style.css" />
+    <MESSAGE value="小修改" />
+    <MESSAGE value="操作逻辑修改" />
+    <MESSAGE value="改接口" />
+    <MESSAGE value="改文档中心" />
+    <MESSAGE value="对接一半" />
+    <option name="LAST_COMMIT_MESSAGE" value="对接一半" />
+  </component>
+</project>
